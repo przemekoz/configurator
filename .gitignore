@@ -2,11 +2,9 @@
 
 # dependencies
 /backend-api/logs
-/frontend-app/node_modules
-/frontend-panel/node_modules
+/backoffice-app/node_modules
 
 # production
-/frontend-app/build
-/frontend-panel/build
+/backoffice-app/build
 
 
