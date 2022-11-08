@@ -18,11 +18,11 @@ require __DIR__ . "/src/Client/ClientGateway.php";
 require __DIR__ . "/src/ErrorHandler.php";
 require __DIR__ . "/src/Database.php";
 
-// require __DIR__ . "/src/Element/ElementController.php";
-// require __DIR__ . "/src/Element/ElementGateway.php";
+// require __DIR__ . "/src/Element/ElementController.-php";
+require __DIR__ . "/src/Element/ElementGateway.php";
 
 // require __DIR__ . "/src/Dictionary/DictionaryController.php";
-// require __DIR__ . "/src/Dictionary/DictionaryGateway.php";
+require __DIR__ . "/src/Dictionary/DictionaryGateway.php";
 
 // require __DIR__ . "/src/DictionaryValue/DictionaryValueController.php";
 // require __DIR__ . "/src/DictionaryValue/DictionaryValueGateway.php";
