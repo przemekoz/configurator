@@ -10,26 +10,12 @@ ini_set('log_errors', TRUE);
 ini_set('error_log', __DIR__ . '/logs/php-errors.log');
 
 require __DIR__ . "/src/fileLog.php";
+require __DIR__ . "/src/endpoints.php";
+require __DIR__ . "/src/getController.php";
+require __DIR__ . "/src/getGateway.php";
 
-require __DIR__ . "/src/Base/BaseGateway.php";
-
-require __DIR__ . "/src/Client/ClientController.php";
-require __DIR__ . "/src/Client/ClientGateway.php";
 require __DIR__ . "/src/ErrorHandler.php";
 require __DIR__ . "/src/Database.php";
-
-// require __DIR__ . "/src/Element/ElementController.-php";
-require __DIR__ . "/src/Element/ElementGateway.php";
-
-// require __DIR__ . "/src/Dictionary/DictionaryController.php";
-require __DIR__ . "/src/Dictionary/DictionaryGateway.php";
-
-// require __DIR__ . "/src/DictionaryValue/DictionaryValueController.php";
-// require __DIR__ . "/src/DictionaryValue/DictionaryValueGateway.php";
-
-// spl_autoload_register(function ($class) {
-//     require __DIR__ . "/src/$class.php";
-// });
 
 set_error_handler("ErrorHandler::handleError");
 set_exception_handler("ErrorHandler::handleException");
@@ -41,7 +27,7 @@ header("Access-Control-Allow-Methods: PUT, POST, GET, DELETE, OPTIONS");
 
 $parts = explode("/", $_SERVER["REQUEST_URI"]);
 
-$endpoints = array("clients", "elements", "dictionaries", "dictionaries_value");
+$endpoints = [Endpoints::Clients, Endpoints::Elements, Endpoints::Dictionaries, Endpoints::DictionariesValue];
 
 $url = explode("?", $parts[1]);
 
@@ -52,22 +38,12 @@ if (!in_array($url[0], $endpoints)) {
 
 $id = $parts[2] ?? null;
 
-
 $database = new Database("localhost", "configurator_db", "root", "");
 
-$clientGateway = new ClientGateway($database);
-$clientController = new ClientController($clientGateway);
-$clientController->processRequest($_SERVER["REQUEST_METHOD"], $id);
-
-
-
-
-
-
-
-
-
-
-
-
-
+try {
+    $gateway = getGateway($url[0], $database);
+    $controller = getController($url[0], $gateway);
+    $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+} catch(Exception $e) {
+    error_log("Caught exception: {$e->getMessage()}");
+}

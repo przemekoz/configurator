@@ -1,30 +1,30 @@
 <?php
 
-class ClientController
+class BaseController
 {
+    public function __construct(
+        private BaseGateway $gateway, 
+        private string $validationErrorsFoo) 
+    { }
 
-    private $name = "Client";
-
-    public function __construct(private ClientGateway $gateway)
-    {
-    }
-    
     public function processRequest(string $method, ?string $id): void
     {
         if ($id) {
-            fileLog($method, $id);
             $this->processResourceRequest($method, $id);
             return;
-        }
-            
+        }        
         $this->processCollectionRequest($method);
+    }
+
+    private function setName(string $name)
+    {
+        $this->name = $name;
     }
     
     private function processResourceRequest(string $method, string $id): void
     {
         $client = $this->gateway->get($id);
         
-        fileLog($client);
         if (!$client) {
             http_response_code(404);
             echo json_encode(["message" => "$this->name not found"]);
@@ -38,10 +38,8 @@ class ClientController
                 
             case "PUT":
                 $data = (array) json_decode(file_get_contents("php://input"), true);
-                
-                fileLog($data);
 
-                $errors = $this->getValidationErrors($data, false);
+                $errors = $this->validationErrorsFoo($data);
                 
                 if ( ! empty($errors)) {
                     http_response_code(422);
@@ -98,7 +96,7 @@ class ClientController
             case "POST":
                 $data = (array) json_decode(file_get_contents("php://input"), true);
                 
-                $errors = $this->getValidationErrors($data);
+                $errors = $this->validationErrorsFoo($data);
                 
                 if ( ! empty($errors)) {
                     http_response_code(422);
@@ -127,37 +125,4 @@ class ClientController
         }
     }
     
-    private function getValidationErrors(array $data, bool $is_new = true): array
-    {
-        $errors = [];
-        
-fileLog($data);
-
-        if ($is_new && empty($data["name"])) {
-            $errors[] = "name is required";
-        }
-        
-        if (array_key_exists("discount", $data)) {
-            if (filter_var($data["discount"], FILTER_VALIDATE_INT) === false) {
-                $errors[] = "discount must be an integer";
-            }
-        }
-
-        if (array_key_exists("email", $data)) {
-            if (filter_var($data["email"], FILTER_VALIDATE_EMAIL) === false) {
-                $errors[] = "email must be an email address";
-            }
-        }
-        
-        return $errors;
-    }
 }
-
-
-
-
-
-
-
-
-
