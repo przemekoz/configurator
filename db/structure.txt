@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Czas generowania: 07 Lis 2022, 20:28
+-- Czas generowania: 09 Lis 2022, 14:38
 -- Wersja serwera: 10.4.25-MariaDB-log
 -- Wersja PHP: 8.1.10
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Baza danych: `configurator_db`
 --
+CREATE DATABASE IF NOT EXISTS `configurator_db` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `configurator_db`;
 
 -- --------------------------------------------------------
 
@@ -27,6 +29,7 @@ SET time_zone = "+00:00";
 -- Struktura tabeli dla tabeli `client`
 --
 
+DROP TABLE IF EXISTS `client`;
 CREATE TABLE `client` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -38,9 +41,36 @@ CREATE TABLE `client` (
 -- --------------------------------------------------------
 
 --
+-- Struktura tabeli dla tabeli `dictionary`
+--
+
+DROP TABLE IF EXISTS `dictionary`;
+CREATE TABLE `dictionary` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `is_active` tinyint(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `dictionary_value`
+--
+
+DROP TABLE IF EXISTS `dictionary_value`;
+CREATE TABLE `dictionary_value` (
+  `id` int(11) NOT NULL,
+  `dictionary_id` int(11) NOT NULL,
+  `name` varchar(255) DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Struktura tabeli dla tabeli `element`
 --
 
+DROP TABLE IF EXISTS `element`;
 CREATE TABLE `element` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -56,6 +86,19 @@ CREATE TABLE `element` (
 --
 ALTER TABLE `client`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indeksy dla tabeli `dictionary`
+--
+ALTER TABLE `dictionary`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeksy dla tabeli `dictionary_value`
+--
+ALTER TABLE `dictionary_value`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `dictionary_id` (`dictionary_id`);
 
 --
 -- Indeksy dla tabeli `element`
@@ -74,10 +117,32 @@ ALTER TABLE `client`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT dla tabeli `dictionary`
+--
+ALTER TABLE `dictionary`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT dla tabeli `dictionary_value`
+--
+ALTER TABLE `dictionary_value`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT dla tabeli `element`
 --
 ALTER TABLE `element`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Ograniczenia dla zrzutĂłw tabel
+--
+
+--
+-- Ograniczenia dla tabeli `dictionary_value`
+--
+ALTER TABLE `dictionary_value`
+  ADD CONSTRAINT `dictionary_value_ibfk_1` FOREIGN KEY (`dictionary_id`) REFERENCES `dictionary` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
