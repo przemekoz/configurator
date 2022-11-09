@@ -27,7 +27,7 @@ header("Access-Control-Allow-Methods: PUT, POST, GET, DELETE, OPTIONS");
 
 $parts = explode("/", $_SERVER["REQUEST_URI"]);
 
-$endpoints = [Endpoints::Clients->value, Endpoints::Elements->value, Endpoints::Dictionaries->value, Endpoints::DictionariesValue->value];
+$endpoints = [Endpoints::Client->value, Endpoints::Element->value, Endpoints::Dictionary->value, Endpoints::DictionaryValue->value];
 
 $url = explode("?", $parts[1]);
 
@@ -39,11 +39,8 @@ if (!in_array($url[0], $endpoints)) {
 $id = $parts[2] ?? null;
 
 $database = new Database("localhost", "configurator_db", "root", "");
+$connection = $database->getConnection();
 
-try {
-    $gateway = getGateway($url[0], $database);
-    $controller = getController($url[0], $gateway);
-    $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
-} catch(Exception $e) {
-    error_log("Caught exception: {$e->getMessage()}");
-}
+$gateway = getGateway($url[0], $connection);
+$controller = getController($url[0], $gateway);
+$controller->processRequest($_SERVER["REQUEST_METHOD"], $id);

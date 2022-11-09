@@ -2,8 +2,8 @@
 
 enum Endpoints: string
 {
-    case Clients = "clients";
-    case Elements = "elements";
-    case Dictionaries = "dictionaries";
-    case DictionariesValue = "dictionaries_value";
+    case Client = "clients";
+    case Element = "elements";
+    case Dictionary = "dictionaries";
+    case DictionaryValue = "dictionaries_value";
 }

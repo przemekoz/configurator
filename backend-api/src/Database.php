@@ -1,6 +1,6 @@
 <?php
 
-class Database  extends PDO
+class Database extends PDO
 {
     public function __construct(private string $host,
                                 private string $name,

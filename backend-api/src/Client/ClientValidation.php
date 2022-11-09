@@ -1,6 +1,4 @@
 <?php
-require __DIR__ . "/../Base/ValidationInterface.php";
-
 
 class ClientValidation implements ValidationInterface {
     

@@ -1,10 +1,11 @@
 <?php
 
 require __DIR__ . "/Base/BaseController.php";
+require __DIR__ . "/Base/ValidationInterface.php";
 require __DIR__ . "/Client/ClientValidation.php";
-require __DIR__ . "/Element/getElementValidationErrors.php";
-require __DIR__ . "/Dictionary/getDictionaryValidationErrors.php";
-require __DIR__ . "/DictionaryValue/getDictionaryValueValidationErrors.php";
+require __DIR__ . "/Element/ElementValidation.php";
+require __DIR__ . "/Dictionary/DictionaryValidation.php";
+require __DIR__ . "/DictionaryValue/DictionaryValueValidation.php";
 
 function getController(string $url, $gateway): BaseController {
     
@@ -12,13 +13,24 @@ function getController(string $url, $gateway): BaseController {
     $name = "__name__";
 
     switch ($url) {
-        case Endpoints::Clients->value:
-            $name = Endpoints::Clients->name;
+        case Endpoints::Client->value:
+            $name = Endpoints::Client->name;
             $validation = new ClientValidation();
             break;
-
-        case Endpoints::Elements->value:
-            // $validation = getElementValidationErrors;
+            
+        case Endpoints::Element->value:
+            $name = Endpoints::Element->name;
+            $validation = new ElementValidation();
+            break;
+            
+        case Endpoints::Dictionary->value:
+            $name = Endpoints::Dictionary->name;
+            $validation = new DictionaryValidation();
+            break;
+                
+        case Endpoints::DictionaryValue->value:
+            $name = Endpoints::DictionaryValue->name;
+            $validation = new DictionaryValueValidation();
             break;
 
         default: 
@@ -27,9 +39,3 @@ function getController(string $url, $gateway): BaseController {
 
     return new BaseController($name, $gateway, $validation);
 }
-
-
-
-
-
-

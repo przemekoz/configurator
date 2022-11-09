@@ -2,9 +2,9 @@
 
 class DictionaryGateway extends BaseGateway
 {
-    public function __construct(Database $database)
+    public function __construct(PDO $connection)
     {
-        parent::__construct($database);
+        parent::__construct($connection);
         parent::setTableName("dictionary");
     }
 
