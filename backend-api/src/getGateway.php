@@ -8,12 +8,12 @@ require __DIR__ . "/DictionaryValue/DictionaryValueGateway.php";
 
 function getGateway(string $url, $database): BaseGateway {
     switch ($url) {
-        case Endpoints::Clients :
+        case Endpoints::Clients->value :
             return new ClientGateway($database);
 
-        case Endpoints::Elements:
+        case Endpoints::Elements->value:
             return new ElementGateway($database);
-        
+            
         default: 
             throw new ErrorException("Error: no matching Gateway object");
              

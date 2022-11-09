@@ -3,8 +3,9 @@
 class BaseController
 {
     public function __construct(
+        private string $name, 
         private BaseGateway $gateway, 
-        private string $validationErrorsFoo) 
+        private ValidationInterface $validationObject) 
     { }
 
     public function processRequest(string $method, ?string $id): void
@@ -14,11 +15,6 @@ class BaseController
             return;
         }        
         $this->processCollectionRequest($method);
-    }
-
-    private function setName(string $name)
-    {
-        $this->name = $name;
     }
     
     private function processResourceRequest(string $method, string $id): void
@@ -39,7 +35,7 @@ class BaseController
             case "PUT":
                 $data = (array) json_decode(file_get_contents("php://input"), true);
 
-                $errors = $this->validationErrorsFoo($data);
+                $errors = $this->validationObject->validate($data);
                 
                 if ( ! empty($errors)) {
                     http_response_code(422);
@@ -88,7 +84,7 @@ class BaseController
                 $rows = $this->gateway->deleteMany();
 
                 echo json_encode(
-                    array(["count" => $rows, "message" => "many {$this->name}s deleted"]),
+                    array(["count" => $rows, "message" => "many $this->name s deleted"]),
                 );
 
                 break;
@@ -96,7 +92,7 @@ class BaseController
             case "POST":
                 $data = (array) json_decode(file_get_contents("php://input"), true);
                 
-                $errors = $this->validationErrorsFoo($data);
+                $errors = $this->validationObject->validate($data);
                 
                 if ( ! empty($errors)) {
                     http_response_code(422);

@@ -27,7 +27,7 @@ header("Access-Control-Allow-Methods: PUT, POST, GET, DELETE, OPTIONS");
 
 $parts = explode("/", $_SERVER["REQUEST_URI"]);
 
-$endpoints = [Endpoints::Clients, Endpoints::Elements, Endpoints::Dictionaries, Endpoints::DictionariesValue];
+$endpoints = [Endpoints::Clients->value, Endpoints::Elements->value, Endpoints::Dictionaries->value, Endpoints::DictionariesValue->value];
 
 $url = explode("?", $parts[1]);
 

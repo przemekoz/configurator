@@ -1,27 +1,31 @@
 <?php
 
 require __DIR__ . "/Base/BaseController.php";
-require __DIR__ . "/Client/getClientValidationErrors.php";
+require __DIR__ . "/Client/ClientValidation.php";
 require __DIR__ . "/Element/getElementValidationErrors.php";
 require __DIR__ . "/Dictionary/getDictionaryValidationErrors.php";
 require __DIR__ . "/DictionaryValue/getDictionaryValueValidationErrors.php";
 
 function getController(string $url, $gateway): BaseController {
     
-    $validationErrorsFoo = null;
+    $validation = null;
+    $name = "__name__";
 
     switch ($url) {
-        case Endpoints::Clients:
-            $validationErrorsFoo = getClientValidationErrors($gateway);
+        case Endpoints::Clients->value:
+            $name = Endpoints::Clients->name;
+            $validation = new ClientValidation();
+            break;
 
-        case Endpoints::Elements:
-            $validationErrorsFoo = getElementValidationErrors($gateway);
-        
+        case Endpoints::Elements->value:
+            // $validation = getElementValidationErrors;
+            break;
+
         default: 
-            throw new ErrorException("Error: no matching getValidationErrors function");
+            throw new ErrorException("Error: no matching Validation class");
     }
 
-    return new BaseController($gateway, $validationErrorsFoo);
+    return new BaseController($name, $gateway, $validation);
 }
 
 
