@@ -4,11 +4,14 @@ import {
   DeleteButton,
   EditButton,
   List,
+  ReferenceArrayField,
+  ReferenceManyField,
   SimpleForm,
   TextField,
   TextInput,
   useGetRecordId,
 } from "react-admin";
+import { DictionaryValueList } from "../DictionaryValue/DictionaryValueList";
 import { FormToolbar } from "../Form/FormToolbar";
 
 export const DictionaryForm = () => {
@@ -19,19 +22,24 @@ export const DictionaryForm = () => {
       <TextInput disabled source="id" />
       <TextInput source="name" />
 
-      <List
-        resource="dictionaries_value"
-        exporter={false}
-        hasCreate={true}
-        filter={{ id_dictionary: recordId }}
-      >
-        <Datagrid rowClick="edit">
-          <TextField source="id" />
-          <TextField source="name" />
-          <EditButton label="" />
-          <DeleteButton label="" />
-        </Datagrid>
-      </List>
+      <DictionaryValueList id_dictionary={recordId} />
+
+      {/* <ReferenceManyField reference="dictionary_values" target="dictionary_id">
+                <Datagrid>
+                    <TextField source="id" />
+                    <TextField source="name" />
+                    
+                </Datagrid>
+            </ReferenceManyField>
+
+            <ReferenceArrayField reference="dictionary_values" source="dictionary_id">
+                <Datagrid>
+                    <TextField source="id" />
+                    <TextField source="name" />
+                    
+                </Datagrid>
+            </ReferenceArrayField> */}
+
     </SimpleForm>
   );
 };
