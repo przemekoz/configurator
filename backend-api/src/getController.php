@@ -1,13 +1,15 @@
 <?php
 
+require __DIR__ . "/Base/MainController.php";
 require __DIR__ . "/Base/BaseController.php";
+require __DIR__ . "/Base/BaseOneToManyController.php";
 require __DIR__ . "/Base/ValidationInterface.php";
 require __DIR__ . "/Client/ClientValidation.php";
 require __DIR__ . "/Element/ElementValidation.php";
 require __DIR__ . "/Dictionary/DictionaryValidation.php";
 require __DIR__ . "/DictionaryValue/DictionaryValueValidation.php";
 
-function getController(string $url, $gateway): BaseController {
+function getController(string $url, $gateway): MainController {
     
     $validation = null;
     $name = "__name__";
@@ -31,6 +33,7 @@ function getController(string $url, $gateway): BaseController {
         case Endpoints::DictionaryValue->value:
             $name = Endpoints::DictionaryValue->name;
             $validation = new DictionaryValueValidation();
+            return new BaseOneToManyController($name, $gateway, $validation);
             break;
 
         default: 

@@ -1,7 +1,7 @@
 import { fetchUtils } from 'react-admin';
 import { stringify } from 'query-string';
+import { apiUrl } from './consts/apiUrl';
 
-const apiUrl = 'http://localhost';
 
 const httpClient = fetchUtils.fetchJson;
 

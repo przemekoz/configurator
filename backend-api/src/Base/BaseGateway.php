@@ -1,20 +1,8 @@
 <?php
 
-class BaseGateway
+class BaseGateway extends MainGateway
 {
-    protected PDO $conn;
-    protected $tableName = "__table_name__";
-
-    public function __construct(PDO $connection)
-    {
-        $this->conn = $connection;
-    }
-
-    protected function setTableName(string $tableName): void
-    {
-        $this->tableName = $tableName;
-    }
-
+    
     public function getAll(): array
     {
         parse_str($_SERVER["QUERY_STRING"], $output);

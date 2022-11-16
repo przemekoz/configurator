@@ -1,5 +1,6 @@
 import { Button, DeleteButton, SaveButton, Toolbar } from "react-admin";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { saveButtonId } from "../consts/saveButtonId";
 
 export const FormToolbar = () => (
   <Toolbar>
@@ -19,7 +20,7 @@ export const FormToolbar = () => (
         }}
         size="medium"
       />
-      <SaveButton />
+      <SaveButton alwaysEnable id={saveButtonId} />
     </div>
   </Toolbar>
 );

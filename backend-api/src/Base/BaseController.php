@@ -1,12 +1,7 @@
 <?php
 
-class BaseController
+class BaseController extends MainController
 {
-    public function __construct(
-        private string $name, 
-        private BaseGateway $gateway, 
-        private ValidationInterface $validationObject) 
-    { }
 
     public function processRequest(string $method, ?string $id): void
     {
