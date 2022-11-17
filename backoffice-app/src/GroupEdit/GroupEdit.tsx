@@ -4,9 +4,8 @@ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { Button } from "react-admin";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
-import axios from "axios";
-import { apiUrl } from "../consts/apiUrl";
-import { saveButtonId } from "../consts/saveButtonId";
+import { saveButtonId } from "../_const/saveButtonId";
+import { Request } from "../_helper/request";
 
 export interface Props {
   source: string;
@@ -23,17 +22,16 @@ export const GroupEdit = ({ children, source, foreignKey }: Props) => {
     const saveButton = document.getElementById(saveButtonId);
     if (saveButton) {
       saveButton.onclick = () => {
-        axios.post(`${apiUrl}/${source}/${foreignKey}`, stateValue.map(item => item.name));
+        Request.post(
+          `${source}/${foreignKey}`,
+          stateValue.map((item) => item.name)
+        );
       };
     }
   }, [stateValue]);
 
   useEffect(() => {
-    function getData() {
-      return axios.get(`${apiUrl}/${source}/${foreignKey}`);
-    }
-
-    getData()
+    Request.get(`${source}/${foreignKey}`)
       .then((result: any) => {
         setStateValue(result.data.data);
       })

@@ -5,8 +5,8 @@ class DictionaryValueValidation implements ValidationInterface {
     public function validate(array $data): array {
         $errors = [];
 
-        if (empty($data["name"])) {
-            $errors[] = "name is required";
+        if (!is_array($data)) {
+            $errors[] = "payload is not an array";
         }
         
         return $errors;

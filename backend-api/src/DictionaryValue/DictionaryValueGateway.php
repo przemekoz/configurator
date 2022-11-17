@@ -8,12 +8,10 @@ class DictionaryValueGateway extends BaseOneToManyGateway
         parent::setTableName("dictionary_value");
     }
 
-    public function create(array $data, string $id): string
+    public function create(array $data, string $id): int
     {
         $this->delete($id);
-        $this->insert($data, $id);
-        // $params = $this->prepareQuery($data);
-        // return parent::createQuery("(name)", "(:name)", $params, $data);
+        return $this->insert($data, $id);
     }
 
     public function getAll(string $id): array | false
@@ -58,16 +56,31 @@ class DictionaryValueGateway extends BaseOneToManyGateway
     private function insert(array $data, string $dictionary_id): int 
     {
 
+        fileLog("-----------------------------");
+        
         fileLog($data);
-        // $sql = "INSERT INTO {$this->tableName} {$fields} VALUES {$placeholders}";
+        count($data);
+        $placeholders = [];
+        for ($i = 0; $i < count($data); $i++) {
+            array_push($placeholders, "(:id_{$i}, :name_{$i})");
+        }
+        
+        $sql = "INSERT INTO {$this->tableName} (dictionary_id, name) VALUES " . implode(',', $placeholders);
+        
+        fileLog($sql);
 
-        // $stmt = $this->conn->prepare($sql);
+        fileLog("-----------------------------<");
 
-        // $this->prepareQuery($stmt, $params);
+        $stmt = $this->conn->prepare($sql);
+        
+        for ($i = 0; $i < count($data); $i++) {
+            $stmt->bindValue(":id_$i", $dictionary_id, PDO::PARAM_INT);
+            $stmt->bindValue(":name_$i", $data[$i], PDO::PARAM_STR);
+        }    
 
-        // $stmt->execute();
+        $stmt->execute();
 
-        // return $this->conn->lastInsertId();
+        return $stmt->rowCount();
     }
 
 

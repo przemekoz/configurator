@@ -3,7 +3,7 @@ import { FormTitle } from "../Form/FormTitle";
 import { ElementForm } from "./ElementForm";
 
 export const ElementEdit = () => (
-  <Edit title={<FormTitle />}>
+  <Edit title={<FormTitle label="element" />}>
     <ElementForm />
   </Edit>
 );

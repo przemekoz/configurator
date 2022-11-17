@@ -1,6 +1,15 @@
 import { useRecordContext } from "react-admin";
 
-export const FormTitle = ({ name = "name" }: { name?: string }) => {
+interface Props {
+  name?: string;
+  label: string;
+}
+
+export const FormTitle = ({ name = "name", label }: Props) => {
   const record = useRecordContext();
-  return <span>Edit user: {record ? record[name] : ""}</span>;
+  return (
+    <span>
+      {record ? "Edit" : "Create"} {label}: {record ? record[name] : ""}
+    </span>
+  );
 };

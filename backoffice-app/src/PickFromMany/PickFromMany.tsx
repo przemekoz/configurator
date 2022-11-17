@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "react-admin";
 import Grid from "@mui/material/Grid";
-import axios from "axios";
 import Box from "@mui/material/Box";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
@@ -10,8 +9,8 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
 import ClearIcon from "@mui/icons-material/Clear";
-import { apiUrl } from "../consts/apiUrl";
-import { saveButtonId } from "../consts/saveButtonId";
+import { saveButtonId } from "../_const/saveButtonId";
+import { Request } from "../_helper/request";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -25,13 +24,20 @@ const MenuProps = {
 };
 
 export interface Props {
-  id: number | string;
+  dictionary_id: number | string;
+  element_id: number | string;
   source: string;
   sourceRelation: string;
   saveTo: string;
 }
 
-export const PickFromMany = ({ id, source, sourceRelation, saveTo }: Props) => {
+export const PickFromMany = ({
+  element_id,
+  source,
+  sourceRelation,
+  saveTo,
+  dictionary_id,
+}: Props) => {
   const [sourceData, setSourceData] = useState<any>({ id: 0, name: "" });
   const [sourceRelationData, setSourceRelationData] = useState<any[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
@@ -40,8 +46,8 @@ export const PickFromMany = ({ id, source, sourceRelation, saveTo }: Props) => {
     const saveButton = document.getElementById(saveButtonId);
     if (saveButton) {
       saveButton.onclick = () => {
-        axios.post(
-          `${apiUrl}/${saveTo}/${id}`,
+        Request.post(
+          `${saveTo}/${element_id}`,
           selectedOptions.map((item) => item.id)
         );
       };
@@ -49,14 +55,7 @@ export const PickFromMany = ({ id, source, sourceRelation, saveTo }: Props) => {
   }, [selectedOptions]);
 
   useEffect(() => {
-    function getSourceData() {
-      return axios.get(`${apiUrl}/${source}/${id}`);
-    }
-    function getSourceRelationData() {
-      return axios.get(`${apiUrl}/${sourceRelation}/${id}`);
-    }
-
-    getSourceData()
+    Request.get(`${source}/${dictionary_id}`)
       .then((result: any) => {
         setSourceData(result.data);
       })
@@ -70,7 +69,7 @@ export const PickFromMany = ({ id, source, sourceRelation, saveTo }: Props) => {
         setSourceData({ id: 1, name: "mocked dictionary name" });
       });
 
-    getSourceRelationData()
+    Request.get(`${sourceRelation}/${dictionary_id}`)
       .then((result: any) => {
         setSourceRelationData(result.data.data);
       })
