@@ -3,6 +3,7 @@ import {
   Datagrid,
   DeleteButton,
   EditButton,
+  ImageField,
   List,
   TextField,
 } from "react-admin";
@@ -10,9 +11,14 @@ import {
 export const ElementList = () => (
   <List>
     <Datagrid rowClick="edit">
-      <TextField source="id" />
-      <TextField source="name" />
-      <BooleanField source="is_active" />
+      <TextField source="id" label="Id" />
+      <ImageField source="thumbnailUrl" label="Image" />
+      <TextField source="title" label="Title" />
+      <BooleanField
+        source="is_active"
+        label="Available"
+        record={{ is_active: true }}
+      />
       <EditButton />
       <DeleteButton />
     </Datagrid>

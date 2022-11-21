@@ -3,6 +3,6 @@ import { DictionaryForm } from "./DictionaryForm";
 
 export const DictionaryCreate = (props: any) => (
   <Create {...props} redirect="list">
-    <DictionaryForm />
+    <DictionaryForm saveLabel="add new dictionary" />
   </Create>
 );

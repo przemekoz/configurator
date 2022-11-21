@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Czas generowania: 09 Lis 2022, 14:38
+-- Czas generowania: 21 Lis 2022, 13:19
 -- Wersja serwera: 10.4.25-MariaDB-log
 -- Wersja PHP: 8.1.10
 
@@ -48,7 +48,8 @@ DROP TABLE IF EXISTS `dictionary`;
 CREATE TABLE `dictionary` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `is_active` tinyint(4) NOT NULL
+  `is_active` tinyint(4) NOT NULL,
+  `multiple` tinyint(4) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -75,6 +76,18 @@ CREATE TABLE `element` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `is_active` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `element_dictionary_value`
+--
+
+DROP TABLE IF EXISTS `element_dictionary_value`;
+CREATE TABLE `element_dictionary_value` (
+  `element_id` int(11) NOT NULL,
+  `dictionary_value_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -105,6 +118,13 @@ ALTER TABLE `dictionary_value`
 --
 ALTER TABLE `element`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indeksy dla tabeli `element_dictionary_value`
+--
+ALTER TABLE `element_dictionary_value`
+  ADD PRIMARY KEY (`element_id`,`dictionary_value_id`),
+  ADD KEY `dictionary_value_id` (`dictionary_value_id`);
 
 --
 -- AUTO_INCREMENT dla zrzuconych tabel
@@ -143,6 +163,13 @@ ALTER TABLE `element`
 --
 ALTER TABLE `dictionary_value`
   ADD CONSTRAINT `dictionary_value_ibfk_1` FOREIGN KEY (`dictionary_id`) REFERENCES `dictionary` (`id`) ON DELETE CASCADE;
+
+--
+-- Ograniczenia dla tabeli `element_dictionary_value`
+--
+ALTER TABLE `element_dictionary_value`
+  ADD CONSTRAINT `element_dictionary_value_ibfk_1` FOREIGN KEY (`dictionary_value_id`) REFERENCES `dictionary_value` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `element_dictionary_value_ibfk_2` FOREIGN KEY (`element_id`) REFERENCES `element` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

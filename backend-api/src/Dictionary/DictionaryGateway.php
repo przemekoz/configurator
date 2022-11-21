@@ -11,7 +11,7 @@ class DictionaryGateway extends BaseGateway
     public function create(array $data): string
     {
         $params = $this->prepareQuery($data);
-        return parent::createQuery("(name, is_active)", "(:name, :is_active)", $params, $data);
+        return parent::createQuery("(name, is_active, multiple)", "(:name, :is_active, :multiple)", $params, $data);
     }
 
     public function update(array $current, array $new): int
@@ -24,7 +24,8 @@ class DictionaryGateway extends BaseGateway
     {
         return [
             [":name", $data["name"], PDO::PARAM_STR],
-            [":is_active", (bool) ($data["is_active"] ?? false), PDO::PARAM_BOOL]
+            [":is_active", (bool) ($data["is_active"] ?? false), PDO::PARAM_BOOL],
+            [":multiple", (bool) ($data["multiple"] ?? false), PDO::PARAM_BOOL]
         ];
     }
 }

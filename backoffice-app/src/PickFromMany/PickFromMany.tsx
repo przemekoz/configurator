@@ -7,10 +7,9 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import Chip from "@mui/material/Chip";
 import ClearIcon from "@mui/icons-material/Clear";
-import { saveButtonId } from "../_const/saveButtonId";
 import { Request } from "../_helper/request";
+import { Chip } from "./Chip";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -26,49 +25,24 @@ const MenuProps = {
 export interface Props {
   dictionary_id: number | string;
   element_id: number | string;
-  source: string;
   sourceRelation: string;
   saveTo: string;
+  label: string;
+  multiple: boolean;
 }
 
 export const PickFromMany = ({
   element_id,
-  source,
   sourceRelation,
   saveTo,
   dictionary_id,
+  label,
+  multiple,
 }: Props) => {
-  const [sourceData, setSourceData] = useState<any>({ id: 0, name: "" });
   const [sourceRelationData, setSourceRelationData] = useState<any[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
 
   useEffect(() => {
-    const saveButton = document.getElementById(saveButtonId);
-    if (saveButton) {
-      saveButton.onclick = () => {
-        Request.post(
-          `${saveTo}/${element_id}`,
-          selectedOptions.map((item) => item.id)
-        );
-      };
-    }
-  }, [selectedOptions]);
-
-  useEffect(() => {
-    Request.get(`${source}/${dictionary_id}`)
-      .then((result: any) => {
-        setSourceData(result.data);
-      })
-      .catch((e) => {
-        console.error(
-          e.name,
-          e.message,
-          e.request.status,
-          e.request.statusText
-        );
-        setSourceData({ id: 1, name: "mocked dictionary name" });
-      });
-
     Request.get(`${sourceRelation}/${dictionary_id}`)
       .then((result: any) => {
         setSourceRelationData(result.data.data);
@@ -86,27 +60,33 @@ export const PickFromMany = ({
           { id: 3, name: "mocked dictionary value 3" },
         ]);
       });
-  }, [setSourceData, setSourceRelationData]);
+  }, [setSourceRelationData]);
+
+  const saveValues = (values: any) => {
+    const data = Array.isArray(values)
+      ? values.map((item: any) => item.id)
+      : [values.id];
+    Request.post(`${saveTo}/${element_id}`, data);
+  };
 
   const handleChange = (event: SelectChangeEvent<typeof selectedOptions>) => {
-    const {
-      target: { value },
-    } = event;
-    setSelectedOptions(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
+    const value = event.target.value;
+    // On autofill we get a stringified value.
+    const newValues = typeof value === "string" ? value.split(",") : value;
+    setSelectedOptions(newValues);
+    saveValues(newValues);
   };
 
   const handleDelete = (index: number) => () => {
-    console.log(index);
-    const newValue = [...selectedOptions];
-    newValue.splice(index, 1);
-    setSelectedOptions(newValue);
+    const newValues = [...selectedOptions];
+    newValues.splice(index, 1);
+    setSelectedOptions(newValues);
+    saveValues(newValues);
   };
 
   const handleRemoveAll = () => {
     setSelectedOptions([]);
+    saveValues([]);
   };
 
   return (
@@ -114,34 +94,32 @@ export const PickFromMany = ({
       <Grid container spacing={2} alignItems="center">
         <Grid item>
           <FormControl sx={{ m: 0, width: 400 }}>
-            <InputLabel className="label-multi-select">
-              {sourceData.name}
-            </InputLabel>
+            <InputLabel className="label-multi-select">{label}</InputLabel>
             <Select
-              multiple
+              autoWidth
+              multiple={multiple}
               value={selectedOptions}
               onChange={handleChange}
-              input={
-                <OutlinedInput
-                  id="select-multiple-chip"
-                  label={sourceData.name}
-                />
-              }
-              renderValue={(selected) => (
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                  {selected.map((value: any, index: number) => (
-                    <Chip
-                      key={value.id}
-                      label={value.name}
-                      variant="outlined"
-                      onMouseDown={(event) => {
-                        event.stopPropagation();
-                      }}
-                      onDelete={handleDelete(index)}
-                    />
-                  ))}
-                </Box>
-              )}
+              input={<OutlinedInput id="select-multiple-chip" label={label} />}
+              renderValue={(selected: any) => {
+                console.log(selected);
+                if (Array.isArray(selected)) {
+                  return (
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                      {selected.map((value: any, index: number) => (
+                        <Chip
+                          key={value.id}
+                          label={value.name}
+                          onDelete={handleDelete(index)}
+                        />
+                      ))}
+                    </Box>
+                  );
+                }
+                return (
+                  <Chip label={selected.name} onDelete={handleRemoveAll} />
+                );
+              }}
               MenuProps={MenuProps}
             >
               {sourceRelationData.map((item: any) => (
@@ -152,14 +130,16 @@ export const PickFromMany = ({
             </Select>
           </FormControl>
         </Grid>
-        <Grid item>
-          <Button
-            onClick={handleRemoveAll}
-            startIcon={<ClearIcon />}
-            label="CLEAR"
-            className="remove-button"
-          />
-        </Grid>
+        {multiple && (
+          <Grid item>
+            <Button
+              onClick={handleRemoveAll}
+              startIcon={<ClearIcon />}
+              label="CLEAR"
+              className="remove-button"
+            />
+          </Grid>
+        )}
       </Grid>
     </div>
   );

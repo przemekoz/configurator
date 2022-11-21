@@ -5,7 +5,7 @@ import { ClientForm } from "./ClientForm";
 export const ClientEdit = () => {
   return (
     <Edit title={<FormTitle label="client" />}>
-      <ClientForm />
+      <ClientForm saveLabel="update client" />
     </Edit>
   );
 };

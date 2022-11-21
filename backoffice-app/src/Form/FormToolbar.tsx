@@ -3,13 +3,17 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Grid from "@mui/material/Grid";
 import { saveButtonId } from "../_const/saveButtonId";
 
-export const FormToolbar = () => (
+interface Props {
+  saveLabel?: string;
+}
+
+export const FormToolbar = ({ saveLabel = "save" }: Props) => (
   <Toolbar>
     <Grid container alignItems="center" justifyContent="space-between">
       <Grid item>
         <Button
           startIcon={<ArrowBackIcon />}
-          label="Back"
+          label="Go back"
           onClick={() => {
             window.history.back();
           }}
@@ -17,7 +21,7 @@ export const FormToolbar = () => (
         />
       </Grid>
       <Grid item>
-        <SaveButton alwaysEnable id={saveButtonId} />
+        <SaveButton alwaysEnable id={saveButtonId} label={saveLabel} />
       </Grid>
     </Grid>
   </Toolbar>

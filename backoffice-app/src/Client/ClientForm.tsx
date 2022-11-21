@@ -1,12 +1,16 @@
-import { BooleanInput, NumberInput, SimpleForm, TextInput } from "react-admin";
-import { FormToolbar } from "../Form/FormToolbar";
+import { BooleanInput, NumberInput, required, TextInput } from "react-admin";
+import { FormWrapper } from "../Form/FormWrapper";
 
-export const ClientForm = () => (
-  <SimpleForm toolbar={<FormToolbar />}>
-    <TextInput disabled source="id" />
-    <TextInput source="name" />
-    <TextInput source="email" />
-    <NumberInput source="discount" />
+interface Props {
+  saveLabel: string;
+}
+
+export const ClientForm = ({ saveLabel }: Props) => (
+  <FormWrapper saveLabel={saveLabel}>
+    <TextInput disabled source="id" fullWidth />
+    <TextInput source="name" fullWidth validate={required()} />
+    <TextInput source="email" fullWidth />
+    <NumberInput source="discount" fullWidth />
     <BooleanInput source="is_active" />
-  </SimpleForm>
+  </FormWrapper>
 );
