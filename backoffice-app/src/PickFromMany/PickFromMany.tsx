@@ -43,23 +43,9 @@ export const PickFromMany = ({
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
 
   useEffect(() => {
-    Request.get(`${sourceRelation}/${dictionary_id}`)
-      .then((result: any) => {
-        setSourceRelationData(result.data.data);
-      })
-      .catch((e) => {
-        console.error(
-          e.name,
-          e.message,
-          e.request.status,
-          e.request.statusText
-        );
-        setSourceRelationData([
-          { id: 1, name: "mocked dictionary value 1" },
-          { id: 2, name: "mocked dictionary value 2" },
-          { id: 3, name: "mocked dictionary value 3" },
-        ]);
-      });
+    Request.get(`${sourceRelation}/${dictionary_id}`).then((result: any) => {
+      setSourceRelationData(result.data.data);
+    });
   }, [setSourceRelationData]);
 
   const saveValues = (values: any) => {
@@ -88,6 +74,10 @@ export const PickFromMany = ({
     setSelectedOptions([]);
     saveValues([]);
   };
+
+  if (!sourceRelationData.length) {
+    return null;
+  }
 
   return (
     <div className="pick-from-many">

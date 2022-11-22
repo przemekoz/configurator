@@ -13,7 +13,7 @@ export const FormToolbar = ({ saveLabel = "save" }: Props) => (
       <Grid item>
         <Button
           startIcon={<ArrowBackIcon />}
-          label="Go back"
+          label="back"
           onClick={() => {
             window.history.back();
           }}
