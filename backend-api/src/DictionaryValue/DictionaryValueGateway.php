@@ -11,7 +11,10 @@ class DictionaryValueGateway extends BaseOneToManyGateway
     public function create(array $data, string $id): int
     {
         $this->delete($id);
-        return $this->insert($data, $id);
+        if (count($data)) {
+            return $this->insert($data, $id);
+        }
+        return 0;
     }
 
     public function getAll(string $id): array | false
@@ -30,7 +33,7 @@ class DictionaryValueGateway extends BaseOneToManyGateway
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             if (isset($row["is_active"])) {
                 $row["is_active"] = (bool) $row["is_active"];
-            } 
+            }
             $data[] = $row;
         }
 
@@ -39,13 +42,13 @@ class DictionaryValueGateway extends BaseOneToManyGateway
         return ["data" => $data, "total" => $stmt->fetch(PDO::FETCH_DEFAULT)[0]];
     }
 
-    private function delete(string $dictionary_id): int 
+    private function delete(string $dictionary_id): int
     {
         $sql = "DELETE FROM {$this->tableName}
                     WHERE dictionary_id = :id";
 
         $stmt = $this->conn->prepare($sql);
-        
+
         $stmt->bindValue(":id", $dictionary_id, PDO::PARAM_INT);
 
         $stmt->execute();
@@ -53,41 +56,24 @@ class DictionaryValueGateway extends BaseOneToManyGateway
         return $stmt->rowCount();
     }
 
-    private function insert(array $data, string $dictionary_id): int 
+    private function insert(array $data, string $dictionary_id): int
     {
-
-        fileLog("-----------------------------");
-        
-        fileLog($data);
-        count($data);
         $placeholders = [];
         for ($i = 0; $i < count($data); $i++) {
             array_push($placeholders, "(:id_{$i}, :name_{$i})");
         }
-        
-        $sql = "INSERT INTO {$this->tableName} (dictionary_id, name) VALUES " . implode(',', $placeholders);
-        
-        fileLog($sql);
 
-        fileLog("-----------------------------<");
+        $sql = "INSERT INTO {$this->tableName} (dictionary_id, name) VALUES " . implode(',', $placeholders);
 
         $stmt = $this->conn->prepare($sql);
-        
+
         for ($i = 0; $i < count($data); $i++) {
             $stmt->bindValue(":id_$i", $dictionary_id, PDO::PARAM_INT);
             $stmt->bindValue(":name_$i", $data[$i], PDO::PARAM_STR);
-        }    
+        }
 
         $stmt->execute();
 
         return $stmt->rowCount();
-    }
-
-
-    private function prepareQuery($data): array
-    {
-        return [
-            [":name", $data["name"], PDO::PARAM_STR],
-        ];
     }
 }

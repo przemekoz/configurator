@@ -13,6 +13,7 @@ import { DictionaryCreate } from './Dictionary/DictionaryCreate';
 import { ElementList } from './Element/ElementList';
 import { ElementEdit } from './Element/ElementEdit';
 import { ElementCreate } from './Element/ElementCreate';
+import './App.css';
 
 
 const App = () => (

@@ -8,48 +8,57 @@ class BaseController extends MainController
         if ($id) {
             $this->processResourceRequest($method, $id);
             return;
-        }        
+        }
         $this->processCollectionRequest($method);
     }
-    
+
     private function processResourceRequest(string $method, string $id): void
     {
+        // if string - specific method
+        if (!is_numeric($id)) {
+            $data = $this->gateway->getDynamicMethod($id);
+            echo json_encode([
+                "method" => $id,
+                "data" => $data
+            ]);
+            return;
+        }
+
         $client = $this->gateway->get($id);
-        
         if (!$client) {
             http_response_code(404);
             echo json_encode(["message" => "$this->name not found"]);
             return;
         }
-        
+
         switch ($method) {
             case "GET":
                 echo json_encode($client);
                 break;
-                
+
             case "PUT":
                 $data = (array) json_decode(file_get_contents("php://input"), true);
 
                 $errors = $this->validationObject->validate($data);
-                
-                if ( ! empty($errors)) {
+
+                if (!empty($errors)) {
                     http_response_code(422);
                     echo json_encode(["errors" => $errors]);
                     break;
                 }
-                
+
                 $rows = $this->gateway->update($client, $data);
-                
+
                 echo json_encode([
                     "id" => $id,
                     "message" => "$this->name $id updated",
                     "rows" => $rows
                 ]);
                 break;
-                
+
             case "DELETE":
                 $rows = $this->gateway->delete($id);
-                
+
                 echo json_encode([
                     "message" => "$this->name $id deleted",
                     "rows" => $rows
@@ -61,13 +70,13 @@ class BaseController extends MainController
                     "message" => "options"
                 ]);
                 break;
-                
+
             default:
                 http_response_code(405);
                 header("Allow: PUT, GET, PATCH, DELETE, OPTIONS");
         }
     }
-    
+
     private function processCollectionRequest(string $method): void
     {
         switch ($method) {
@@ -83,27 +92,27 @@ class BaseController extends MainController
                 );
 
                 break;
-                
+
             case "POST":
                 $data = (array) json_decode(file_get_contents("php://input"), true);
-                
+
                 $errors = $this->validationObject->validate($data);
-                
-                if ( ! empty($errors)) {
+
+                if (!empty($errors)) {
                     http_response_code(422);
                     echo json_encode(["errors" => $errors]);
                     break;
                 }
-                
+
                 $id = $this->gateway->create($data);
-                
+
                 http_response_code(201);
                 echo json_encode([
                     "message" => "$this->name created",
                     "id" => $id
                 ]);
                 break;
-            
+
             case "OPTIONS":
                 echo json_encode([
                     "message" => "options"
@@ -115,5 +124,4 @@ class BaseController extends MainController
                 header("Allow: GET, POST");
         }
     }
-    
 }

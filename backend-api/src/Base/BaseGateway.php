@@ -2,7 +2,7 @@
 
 class BaseGateway extends MainGateway
 {
-    
+
     public function getAll(): array
     {
         parse_str($_SERVER["QUERY_STRING"], $output);
@@ -20,17 +20,14 @@ class BaseGateway extends MainGateway
 
         $data = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            if (isset($row["is_active"])) {
-                $row["is_active"] = (bool) $row["is_active"];
-            } 
-            $data[] = $row;
+            $data[] = $this->parseBooleanValues($row);
         }
 
         $stmt = $this->conn->query("SELECT count(1) FROM {$this->tableName}");
 
         return ["data" => $data, "total" => $stmt->fetch(PDO::FETCH_DEFAULT)[0]];
     }
-    
+
     public function get(string $id): array | false
     {
         $sql = "SELECT *
@@ -45,8 +42,8 @@ class BaseGateway extends MainGateway
 
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($data !== false && isset($data["is_active"])) {
-            $data["is_active"] = (bool) $data["is_active"];
+        if ($data !== false) {
+            $data = $this->parseBooleanValues($data);
         }
 
         return $data;
@@ -88,7 +85,7 @@ class BaseGateway extends MainGateway
                 WHERE id = :id";
 
         $stmt = $this->conn->prepare($sql);
-        
+
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
 
         $stmt->execute();
@@ -102,30 +99,44 @@ class BaseGateway extends MainGateway
         $ids = explode(",", $output['ids']);
 
         $newParams = array();
-        foreach ($ids as $n => $val){ $newParams[] = ":id_$n"; }
+        foreach ($ids as $n => $val) {
+            $newParams[] = ":id_$n";
+        }
 
         $sql = "DELETE FROM {$this->tableName}
-                WHERE id IN (" . implode(", ",$newParams). ")";
+                WHERE id IN (" . implode(", ", $newParams) . ")";
 
         $stmt = $this->conn->prepare($sql);
-        
+
         foreach ($ids as $n => $val) {
             $stmt->bindValue(":id_$n", $val, PDO::PARAM_INT);
-        }    
+        }
 
         $stmt->execute();
 
         return $stmt->rowCount();
-
     }
 
-    private function prepareQuery($stmt, $params) : void 
+    private function prepareQuery($stmt, $params): void
     {
-        fileLog($params);
         foreach ($params as $param) {
             // $stmt->bindValue(":email", $data["email"], PDO::PARAM_STR);
-            fileLog($param);
+            fileLog($param[0]);
+            fileLog($param[1]);
+            fileLog($param[2]);
             $stmt->bindValue($param[0], $param[1], $param[2]);
         }
+    }
+
+    private function parseBooleanValues(array $data): array
+    {
+        $newData = $data;
+        $booleanFields = ["is_active", "multiple"];
+        foreach ($booleanFields as $field) {
+            if (isset($data[$field])) {
+                $newData[$field] = (bool) $newData[$field];
+            }
+        }
+        return $newData;
     }
 }
