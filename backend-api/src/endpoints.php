@@ -6,4 +6,5 @@ enum Endpoints: string
     case Element = "elements";
     case Dictionary = "dictionaries";
     case DictionaryValue = "dictionary_values";
+    case ElementDictionaryValue = "element_dictionary_values";
 }
