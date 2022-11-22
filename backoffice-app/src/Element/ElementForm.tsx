@@ -25,10 +25,11 @@ export const ElementForm = ({ saveLabel }: Props) => {
   const [dictionaries, setDictionaries] = useState<any[]>([]);
 
   useEffect(() => {
-    Request.get(`${Endpoint.dictionaries}?size=10&page=0&sortField=name&sortDir=asc`)
-      .then((response: any) => {
-        setDictionaries(response.data.data);
-      })
+    Request.get(
+      `${Endpoint.dictionaries}?size=10&page=0&sortField=name&sortDir=asc`
+    ).then((response: any) => {
+      setDictionaries(response.data.data);
+    });
   }, []);
 
   return (
@@ -36,7 +37,7 @@ export const ElementForm = ({ saveLabel }: Props) => {
       <FormTab label="base">
         <TextInput disabled source="id" label="Id" fullWidth />
         <TextInput source="name" label="Name" fullWidth validate={required()} />
-        <BooleanInput source="is_active" />
+        <BooleanInput source="is_active" defaultChecked />
         <Grid container>
           <Grid item>
             <ImageField source="thumbnailUrl" label="Image" />

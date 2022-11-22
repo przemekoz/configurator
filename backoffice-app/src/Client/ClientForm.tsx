@@ -11,6 +11,6 @@ export const ClientForm = ({ saveLabel }: Props) => (
     <TextInput source="name" fullWidth validate={required()} />
     <TextInput source="email" fullWidth />
     <NumberInput source="discount" fullWidth />
-    <BooleanInput source="is_active" />
+    <BooleanInput source="is_active" defaultChecked />
   </FormWrapper>
 );
