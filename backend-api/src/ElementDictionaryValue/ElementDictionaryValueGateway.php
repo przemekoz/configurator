@@ -50,8 +50,8 @@ class ElementDictionaryValueGateway extends BaseOneToManyGateway
     private function delete(int $dictionary_id, int $element_id): int
     {
         $sql = "DELETE FROM {$this->tableName}
-                    WHERE element_id = :element_id 
-                    AND dictionary_id = :dictionary_id";
+                WHERE element_id = :element_id 
+                AND dictionary_value_id IN (SELECT id FROM dictionary_value WHERE dictionary_id = :dictionary_id)";
 
         $stmt = $this->conn->prepare($sql);
 
