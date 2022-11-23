@@ -85,9 +85,8 @@ export const GroupEdit = ({ children, source, foreignKey }: Props) => {
     <div className="group-edit">
       Values
       {stateValue.map((item: any, dataIndex: number) => (
-        <>
+        <div key={dataIndex}>
           <GroupEditRow
-            key={dataIndex}
             index={dataIndex}
             item={item}
             handleChange={handleChange}
@@ -98,7 +97,7 @@ export const GroupEdit = ({ children, source, foreignKey }: Props) => {
             {children}
           </GroupEditRow>
           <Divider />
-        </>
+        </div>
       ))}
       <Button
         onClick={handleAdd}

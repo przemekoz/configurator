@@ -29,12 +29,12 @@ export const DictionaryForm = ({ recordId = 0, saveLabel, nextId }: Props) => {
     <FormWrapper saveLabel={saveLabel}>
       <TextInput disabled source="id" fullWidth />
       <TextInput source="name" fullWidth validate={required()} />
-      <BooleanInput source="is_active" defaultChecked />
+      <BooleanInput source="is_active" />
 
       {recordId === 0 && (
         <Stack direction="row" spacing={1} alignItems="baseline">
           <Typography>Single choice</Typography>
-          <BooleanInput source="multiple" defaultChecked label="" />
+          <BooleanInput source="multiple" label="" />
           <Typography>Multiple choice</Typography>
         </Stack>
       )}
@@ -42,7 +42,6 @@ export const DictionaryForm = ({ recordId = 0, saveLabel, nextId }: Props) => {
       {recordId > 0 && (
         <Typography my={1}>
           {Boolean(record.multiple) ? "Multiple" : "Single"} choice dictionary
-          <Divider />
         </Typography>
       )}
 

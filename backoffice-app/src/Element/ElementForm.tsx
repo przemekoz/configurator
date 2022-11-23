@@ -37,7 +37,7 @@ export const ElementForm = ({ saveLabel }: Props) => {
       <FormTab label="base">
         <TextInput disabled source="id" label="Id" fullWidth />
         <TextInput source="name" label="Name" fullWidth validate={required()} />
-        <BooleanInput source="is_active" defaultChecked />
+        <BooleanInput source="is_active" />
         <Grid container>
           <Grid item>
             <ImageField source="thumbnailUrl" label="Image" />
