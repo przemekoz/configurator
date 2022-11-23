@@ -10,8 +10,9 @@ require __DIR__ . "/Dictionary/DictionaryValidation.php";
 require __DIR__ . "/DictionaryValue/DictionaryValueValidation.php";
 require __DIR__ . "/ElementDictionaryValue/ElementDictionaryValueValidation.php";
 
-function getController(string $url, $gateway): MainController {
-    
+function getController(string $url, $gateway): MainController
+{
+
     $validation = null;
     $name = "__name__";
 
@@ -20,17 +21,17 @@ function getController(string $url, $gateway): MainController {
             $name = Endpoints::Client->name;
             $validation = new ClientValidation();
             break;
-            
+
         case Endpoints::Element->value:
             $name = Endpoints::Element->name;
             $validation = new ElementValidation();
             break;
-            
+
         case Endpoints::Dictionary->value:
             $name = Endpoints::Dictionary->name;
             $validation = new DictionaryValidation();
             break;
-                
+
         case Endpoints::DictionaryValue->value:
             $name = Endpoints::DictionaryValue->name;
             $validation = new DictionaryValueValidation();
@@ -39,10 +40,10 @@ function getController(string $url, $gateway): MainController {
 
         case Endpoints::ElementDictionaryValue->value:
             $name = Endpoints::ElementDictionaryValue->name;
-            $validation = new ElementDictionaryValue();
-            break;    
+            $validation = new ElementDictionaryValueValidation();
+            break;
 
-        default: 
+        default:
             throw new ErrorException("Error: no matching Validation class");
     }
 

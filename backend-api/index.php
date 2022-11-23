@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 error_reporting(255);
 ini_set('ignore_repeated_errors', TRUE);
-ini_set('display_errors', FALSE); 
+ini_set('display_errors', FALSE);
 
 ini_set('log_errors', TRUE);
 ini_set('error_log', __DIR__ . '/logs/php-errors.log');
@@ -28,7 +28,13 @@ header("Access-Control-Allow-Methods: PUT, POST, GET, DELETE, OPTIONS");
 
 $parts = explode("/", $_SERVER["REQUEST_URI"]);
 
-$endpoints = [Endpoints::Client->value, Endpoints::Element->value, Endpoints::Dictionary->value, Endpoints::DictionaryValue->value];
+$endpoints = [
+    Endpoints::Client->value,
+    Endpoints::Element->value,
+    Endpoints::Dictionary->value,
+    Endpoints::DictionaryValue->value,
+    Endpoints::ElementDictionaryValue->value
+];
 
 $url = explode("?", $parts[1]);
 

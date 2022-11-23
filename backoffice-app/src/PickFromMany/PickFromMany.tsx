@@ -30,7 +30,7 @@ export interface Props {
   label: string;
   multiple: boolean;
 }
-
+// getAllEntries
 export const PickFromMany = ({
   element_id,
   sourceRelation,
@@ -42,17 +42,24 @@ export const PickFromMany = ({
   const [sourceRelationData, setSourceRelationData] = useState<any[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
 
+  const queryString = `element_id=${element_id}&dictionary_id=${dictionary_id}`;
+
   useEffect(() => {
     Request.get(`${sourceRelation}/${dictionary_id}`).then((result: any) => {
       setSourceRelationData(result.data.data);
     });
-  }, [setSourceRelationData]);
+    Request.get(`${saveTo}/getAllEntries?${queryString}`).then(
+      (result: any) => {
+        setSelectedOptions(result.data.data.data);
+      }
+    );
+  }, [setSourceRelationData, setSelectedOptions]);
 
   const saveValues = (values: any) => {
     const data = Array.isArray(values)
       ? values.map((item: any) => item.id)
       : [values.id];
-    Request.post(`${saveTo}/${element_id}`, data);
+    Request.post(`${saveTo}/saveValues?${queryString}`, data);
   };
 
   const handleChange = (event: SelectChangeEvent<typeof selectedOptions>) => {
@@ -74,6 +81,8 @@ export const PickFromMany = ({
     setSelectedOptions([]);
     saveValues([]);
   };
+
+  console.log(selectedOptions);
 
   if (!sourceRelationData.length) {
     return null;

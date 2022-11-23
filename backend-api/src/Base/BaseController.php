@@ -16,9 +16,10 @@ class BaseController extends MainController
     {
         // if string - specific method
         if (!is_numeric($id)) {
-            $data = $this->gateway->getDynamicMethod($id);
+            $methodName = strpos($id, "?") ? substr($id, 0, strpos($id, "?")) : $id;
+            $data = $this->gateway->getDynamicMethod($methodName);
             echo json_encode([
-                "method" => $id,
+                "method" => $methodName,
                 "data" => $data
             ]);
             return;
