@@ -50,7 +50,7 @@ export const DictionaryForm = ({ recordId = 0, saveLabel, nextId }: Props) => {
         foreignKey={recordId || nextInsertId}
       >
         {/* <TextFieldMUI data-field="id" data-label="Id" disabled fullWidth /> */}
-        <TextFieldMUI data-field="name" data-label="Name" fullWidth />
+        <TextFieldMUI data-field="name" data-label="Value" fullWidth />
       </GroupEdit>
     </FormWrapper>
   );
