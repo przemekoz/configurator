@@ -20,7 +20,7 @@ class BaseGateway extends MainGateway
 
         $data = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $data[] = $this->parseBooleanValues($row);
+            $data[] = parseBooleanResponse($row);
         }
 
         $stmt = $this->conn->query("SELECT count(1) FROM {$this->tableName}");
@@ -43,7 +43,7 @@ class BaseGateway extends MainGateway
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($data !== false) {
-            $data = $this->parseBooleanValues($data);
+            $data = parseBooleanResponse($data);
         }
 
         return $data;
@@ -126,17 +126,5 @@ class BaseGateway extends MainGateway
             fileLog($param[2]);
             $stmt->bindValue($param[0], $param[1], $param[2]);
         }
-    }
-
-    private function parseBooleanValues(array $data): array
-    {
-        $newData = $data;
-        $booleanFields = ["is_active", "multiple"];
-        foreach ($booleanFields as $field) {
-            if (isset($data[$field])) {
-                $newData[$field] = (bool) $newData[$field];
-            }
-        }
-        return $newData;
     }
 }

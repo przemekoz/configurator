@@ -31,10 +31,7 @@ class DictionaryValueGateway extends BaseOneToManyGateway
 
         $data = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            if (isset($row["is_active"])) {
-                $row["is_active"] = (bool) $row["is_active"];
-            }
-            $data[] = $row;
+            $data[] = parseBooleanResponse($row);
         }
 
         $stmt = $this->conn->query("SELECT count(1) FROM {$this->tableName}");

@@ -10,6 +10,7 @@ ini_set('log_errors', TRUE);
 ini_set('error_log', __DIR__ . '/logs/php-errors.log');
 
 require __DIR__ . "/src/fileLog.php";
+require __DIR__ . "/src/parseBooleanResponse.php";
 require __DIR__ . "/src/endpoints.php";
 require __DIR__ . "/src/getController.php";
 require __DIR__ . "/src/getGateway.php";
