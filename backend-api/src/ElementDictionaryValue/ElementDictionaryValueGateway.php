@@ -33,7 +33,9 @@ class ElementDictionaryValueGateway extends BaseOneToManyGateway
 
         $stmt->execute();
 
-        return ["data" => $stmt->fetchAll(), "total" => count($data)];
+        $data = $stmt->fetchAll();
+
+        return ["data" => $data, "total" => count($data)];
     }
 
     private function delete(string $dictionary_id): int
