@@ -9,7 +9,6 @@ import TextFieldMUI from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { FormWrapper } from "../Form/FormWrapper";
-import Divider from "@mui/material/Divider";
 
 interface Props {
   saveLabel: string;
@@ -19,8 +18,6 @@ interface Props {
 
 export const DictionaryForm = ({ recordId = 0, saveLabel, nextId }: Props) => {
   const record = useRecordContext();
-
-  console.log(recordId, nextId);
 
   // @TODO @FIXME - if will be more than one user nextId + userId
   const nextInsertId = nextId ? nextId + 1 : undefined;

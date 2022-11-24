@@ -12,7 +12,7 @@ import { FormToolbar } from "../Form/FormToolbar";
 import { PickFromMany } from "../PickFromMany/PickFromMany";
 import Grid from "@mui/material/Grid";
 import { useEffect, useState } from "react";
-import { Request } from "../_helper/request";
+import { Http } from "../_helper/http";
 import { Endpoint } from "../_const/endpoint";
 
 interface Props {
@@ -25,7 +25,7 @@ export const ElementForm = ({ saveLabel }: Props) => {
   const [dictionaries, setDictionaries] = useState<any[]>([]);
 
   useEffect(() => {
-    Request.get(
+    Http.get(
       `${Endpoint.dictionaries}?size=10&page=0&sortField=name&sortDir=asc`
     ).then((response: any) => {
       setDictionaries(response.data.data);

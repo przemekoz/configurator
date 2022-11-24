@@ -8,23 +8,6 @@ class ElementDictionaryValueGateway extends BaseOneToManyGateway
         parent::setTableName("element_dictionary_value");
     }
 
-    public function saveValues(): int
-    {
-        $data = (array) json_decode(file_get_contents("php://input"), true);
-
-        [$element_id, $dictionary_id] = $this->getRequestParams();
-
-        fileLog($data);
-        fileLog($element_id);
-        fileLog($dictionary_id);
-
-        $this->delete($dictionary_id, $element_id);
-        if (count($data)) {
-            return $this->insert($data, $element_id);
-        }
-        return 0;
-    }
-
     public function getAllEntries(): array | false
     {
         [$element_id, $dictionary_id] = $this->getRequestParams();
@@ -45,6 +28,63 @@ class ElementDictionaryValueGateway extends BaseOneToManyGateway
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return ["data" => $data, "total" => count($data)];
+    }
+
+    public function saveValues(): int
+    {
+        $data = (array) json_decode(file_get_contents("php://input"), true);
+
+        [$element_id, $dictionary_id] = $this->getRequestParams();
+
+        fileLog($data);
+        fileLog($element_id);
+        fileLog($dictionary_id);
+
+        $this->delete($dictionary_id, $element_id);
+        if (count($data)) {
+            return $this->insert($data, $element_id);
+        }
+        return 0;
+    }
+
+    public function getAssignedDictionaryValues(): int
+    {
+        parse_str($_SERVER["QUERY_STRING"], $output);
+        $dictionary_value_id = $output["id"];
+
+        $sql = "SELECT SUM(1)
+            FROM {$this->tableName}
+            WHERE dictionary_value_id = :dictionary_value_id";
+
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->bindValue(":dictionary_value_id", $dictionary_value_id, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $data = $stmt->fetch();
+
+        return $data[0] ?? 0;
+    }
+
+    public function getAssignedDictionaries(): int
+    {
+        parse_str($_SERVER["QUERY_STRING"], $output);
+        $dictionary_id = $output["id"];
+
+        $sql = "SELECT SUM(1)
+         FROM {$this->tableName} edv
+         WHERE edv.dictionary_value_id IN (SELECT id FROM dictionary_value WHERE dictionary_id = :dictionary_id )";
+
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->bindValue(":dictionary_id", $dictionary_id, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $data = $stmt->fetch();
+
+        return $data[0];
     }
 
     private function delete(int $dictionary_id, int $element_id): int

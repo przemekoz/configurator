@@ -8,7 +8,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import ClearIcon from "@mui/icons-material/Clear";
-import { Request } from "../_helper/request";
+import { Http } from "../_helper/http";
 import { Chip } from "./Chip";
 
 const ITEM_HEIGHT = 48;
@@ -45,21 +45,19 @@ export const PickFromMany = ({
   const queryString = `element_id=${element_id}&dictionary_id=${dictionary_id}`;
 
   useEffect(() => {
-    Request.get(`${sourceRelation}/${dictionary_id}`).then((result: any) => {
+    Http.get(`${sourceRelation}/${dictionary_id}`).then((result: any) => {
       setSourceRelationData(result.data.data);
     });
-    Request.get(`${saveTo}/getAllEntries?${queryString}`).then(
-      (result: any) => {
-        setSelectedOptions(result.data.data.data);
-      }
-    );
+    Http.get(`${saveTo}/getAllEntries?${queryString}`).then((result: any) => {
+      setSelectedOptions(result.data.data.data);
+    });
   }, [setSourceRelationData, setSelectedOptions]);
 
   const saveValues = (values: any) => {
     const data = Array.isArray(values)
       ? values.map((item: any) => item.id)
       : [values.id];
-    Request.post(`${saveTo}/saveValues?${queryString}`, data);
+    Http.post(`${saveTo}/saveValues?${queryString}`, data);
   };
 
   const handleChange = (event: SelectChangeEvent<typeof selectedOptions>) => {

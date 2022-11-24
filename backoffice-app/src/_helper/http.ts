@@ -1,13 +1,13 @@
 import axios from "axios";
 import { apiUrl } from "../_const/apiUrl";
 
-export class Request {
+export class Http {
   static get(url: string) {
-    return axios.get(Request.getUrl(url));
+    return axios.get(Http.getUrl(url));
   }
 
   static post(url: string, params: any) {
-    return axios.post(Request.getUrl(url), params);
+    return axios.post(Http.getUrl(url), params);
   }
 
   private static getUrl(url: string) {

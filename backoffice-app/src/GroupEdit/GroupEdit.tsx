@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { Button } from "react-admin";
 import { saveButtonId } from "../_const/saveButtonId";
-import { Request } from "../_helper/request";
+import { Http } from "../_helper/http";
 import { GroupEditRow } from "./GroupEditRow";
 import Divider from "@mui/material/Divider";
 import { OrderChangeType } from "../_const/orderChangeType";
@@ -20,16 +20,13 @@ export const GroupEdit = ({ children, source, foreignKey }: Props) => {
     const saveButton = document.getElementById(saveButtonId);
     if (saveButton) {
       saveButton.onclick = () => {
-        Request.post(
-          `${source}/${foreignKey}`,
-          stateValue.map((item) => item.name)
-        );
+        Http.post(`${source}/${foreignKey}`, stateValue);
       };
     }
   }, [stateValue]);
 
   useEffect(() => {
-    Request.get(`${source}/${foreignKey}`)
+    Http.get(`${source}/${foreignKey}`)
       .then((result: any) => {
         setStateValue(result.data.data);
       })
@@ -57,13 +54,11 @@ export const GroupEdit = ({ children, source, foreignKey }: Props) => {
     setStateValue(newValue);
   };
 
-  const handleRemove =
-    (dataIndex: number) => (event: React.MouseEvent<HTMLButtonElement>) => {
-      event.preventDefault();
-      const newValue = [...stateValue];
-      newValue.splice(dataIndex, 1);
-      setStateValue(newValue);
-    };
+  const handleRemove = (dataIndex: number) => {
+    const newValue = [...stateValue];
+    newValue.splice(dataIndex, 1);
+    setStateValue(newValue);
+  };
 
   const handleOrderChange =
     (dataIndex: number, type: OrderChangeType) =>
