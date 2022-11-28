@@ -5,12 +5,13 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { Button } from "react-admin";
 import Grid from "@mui/material/Grid";
 import { OrderChangeType } from "../_const/orderChangeType";
-import { ConfirmBeforeDeletingRelation } from "../Confirm/ConfirmBeforeDeletingRelation";
-import { Endpoint } from "../_const/endpoint";
 
 export interface Props {
   index: number;
-  handleRemove(index: number): void;
+  handleRemove(
+    index: number,
+    id: number
+  ): (event: React.MouseEvent<HTMLButtonElement>) => void;
   handleOrderChange(
     index: number,
     type: OrderChangeType
@@ -34,19 +35,6 @@ export const GroupEditRow = ({
 }: Props) => {
   const arrayChildren = React.Children.toArray(children);
 
-  const [itemId, setItemId] = useState(0);
-  const [removeIndex, setRemoveIndex] = useState(0);
-
-  const onClickRemove = (index: number, id: number) => () => {
-    setRemoveIndex(index);
-    setItemId(id);
-  };
-
-  const onConfirmRemove = () => {
-    console.log("onConfirmRemove", itemId, removeIndex);
-    handleRemove(removeIndex);
-  };
-
   return (
     <Grid container spacing={2} alignItems="center">
       <Grid item>{index + 1}</Grid>
@@ -61,7 +49,7 @@ export const GroupEditRow = ({
       ))}
       <Grid item>
         <Button
-          onClick={onClickRemove(index, item.id)}
+          onClick={handleRemove(index, item.id)}
           startIcon={<ClearIcon />}
           label=""
           className="remove-button"
@@ -85,13 +73,6 @@ export const GroupEditRow = ({
           />
         )}
       </Grid>
-      <ConfirmBeforeDeletingRelation
-        getUrl={`${Endpoint.element_dictionary_values}/getAssignedDictionaryValues?id=`}
-        id={itemId}
-        onConfirm={onConfirmRemove}
-        title="Confirm deleting dictionary value relation"
-        text="Are you sure to remove relation ?"
-      />
     </Grid>
   );
 };

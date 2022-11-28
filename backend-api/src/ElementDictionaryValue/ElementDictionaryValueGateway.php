@@ -36,10 +36,6 @@ class ElementDictionaryValueGateway extends BaseOneToManyGateway
 
         [$element_id, $dictionary_id] = $this->getRequestParams();
 
-        fileLog($data);
-        fileLog($element_id);
-        fileLog($dictionary_id);
-
         $this->delete($dictionary_id, $element_id);
         if (count($data)) {
             return $this->insert($data, $element_id);

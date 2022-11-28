@@ -120,10 +120,6 @@ class BaseGateway extends MainGateway
     private function prepareQuery($stmt, $params): void
     {
         foreach ($params as $param) {
-            // $stmt->bindValue(":email", $data["email"], PDO::PARAM_STR);
-            fileLog($param[0]);
-            fileLog($param[1]);
-            fileLog($param[2]);
             $stmt->bindValue($param[0], $param[1], $param[2]);
         }
     }

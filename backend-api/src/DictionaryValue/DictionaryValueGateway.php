@@ -8,13 +8,22 @@ class DictionaryValueGateway extends BaseOneToManyGateway
         parent::setTableName("dictionary_value");
     }
 
-    public function create(array $data, string $id): int
+    public function create(array $data, string $dictionary_id): int
     {
-        $this->delete($id);
-        if (count($data)) {
-            return $this->insert($data, $id);
+        foreach ($data as $item) {
+            list("name" => $name, "id" => $id, "order" => $sort, "to_delete" => $to_delete) = $item;
+
+            if ($id) {
+                if ($to_delete)
+                    $this->delete($id);
+                else
+                    $this->update($id, $name, $sort);
+            } else {
+                if (!$to_delete)
+                    $this->insert($name, $sort, $dictionary_id);
+            }
         }
-        return 0;
+        return 1;
     }
 
     public function getAll(string $id): array | false
@@ -22,11 +31,8 @@ class DictionaryValueGateway extends BaseOneToManyGateway
         $sql = "SELECT *
                 FROM {$this->tableName}
                 WHERE dictionary_id = :id";
-
         $stmt = $this->conn->prepare($sql);
-
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
-
         $stmt->execute();
 
         $data = [];
@@ -34,43 +40,43 @@ class DictionaryValueGateway extends BaseOneToManyGateway
             $data[] = parseBooleanResponse($row);
         }
 
-        $stmt = $this->conn->query("SELECT count(1) FROM {$this->tableName}");
-
-        return ["data" => $data, "total" => $stmt->fetch(PDO::FETCH_DEFAULT)[0]];
+        return ["data" => $data, "total" => count($data)];
     }
 
-    private function delete(string $dictionary_id): int
+    private function delete(string $id): int
     {
-        $sql = "DELETE FROM {$this->tableName}
-                    WHERE dictionary_id = :id";
-
+        $sql = "DELETE FROM {$this->tableName} WHERE id = :id LIMIT 1";
         $stmt = $this->conn->prepare($sql);
 
-        $stmt->bindValue(":id", $dictionary_id, PDO::PARAM_INT);
+        $stmt->bindValue(":id", $id, PDO::PARAM_INT);
 
         $stmt->execute();
-
         return $stmt->rowCount();
     }
 
-    private function insert(array $data, string $dictionary_id): int
+    private function update(string $id, string $name, int $sort): int
     {
-        $placeholders = [];
-        for ($i = 0; $i < count($data); $i++) {
-            array_push($placeholders, "(:id_{$i}, :name_{$i})");
-        }
-
-        $sql = "INSERT INTO {$this->tableName} (dictionary_id, name) VALUES " . implode(',', $placeholders);
-
+        $sql = "UPDATE {$this->tableName} SET name = :name, sort = :sort WHERE id = :id LIMIT 1";
         $stmt = $this->conn->prepare($sql);
 
-        for ($i = 0; $i < count($data); $i++) {
-            $stmt->bindValue(":id_$i", $dictionary_id, PDO::PARAM_INT);
-            $stmt->bindValue(":name_$i", $data[$i], PDO::PARAM_STR);
-        }
+        $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+        $stmt->bindValue(":name", $name, PDO::PARAM_STR);
+        $stmt->bindValue(":sort", $sort, PDO::PARAM_INT);
 
         $stmt->execute();
+        return $stmt->rowCount();
+    }
 
+    private function insert(string $name, int $sort, string $dictionary_id): int
+    {
+        $sql = "INSERT INTO {$this->tableName} (dictionary_id, name, sort) VALUES (:dictionary_id, :name, :sort)";
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->bindValue(":dictionary_id", $dictionary_id, PDO::PARAM_INT);
+        $stmt->bindValue(":name", $name, PDO::PARAM_STR);
+        $stmt->bindValue(":sort", $sort, PDO::PARAM_INT);
+
+        $stmt->execute();
         return $stmt->rowCount();
     }
 }
