@@ -80,7 +80,7 @@ class ElementDictionaryValueGateway extends BaseOneToManyGateway
 
         $data = $stmt->fetch();
 
-        return $data[0];
+        return $data[0] || 0;
     }
 
     private function delete(int $dictionary_id, int $element_id): int

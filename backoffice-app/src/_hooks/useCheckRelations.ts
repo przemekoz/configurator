@@ -2,16 +2,15 @@ import { Http } from "../_helper/http";
 
 export const useCheckRelations = (url: string) => {
   return (id: number) => {
+    // return Promise.resolve(0);
+
     return new Promise((resolve, reject) => {
       Http.get(`${url}${id}`).then((response: any) => {
         const count = response.data.data;
-        if (count > 0) {
+        if (count > 0)
           reject(count);
-          console.log("useCheckRelations are connections");
-        } else {
+         else 
           resolve(0);
-          console.log("useCheckRelations are connections");
-        }
       });
     });
   };

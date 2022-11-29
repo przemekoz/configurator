@@ -1,13 +1,13 @@
-import React, { ReactElement } from "react";
+import React from "react";
 import { SimpleForm } from "react-admin";
 import { FormToolbar } from "./FormToolbar";
 
 interface Props {
-  saveLabel?: string;
+  isEdit?: boolean;
   children: any;
 }
-export const FormWrapper = ({ saveLabel, children }: Props) => (
-  <SimpleForm toolbar={<FormToolbar saveLabel={saveLabel} />}>
+export const FormWrapper = ({ isEdit, children }: Props) => (
+  <SimpleForm toolbar={<FormToolbar saveLabel={isEdit ? "UPDATE" : "ADD"} />}>
     {children}
   </SimpleForm>
 );

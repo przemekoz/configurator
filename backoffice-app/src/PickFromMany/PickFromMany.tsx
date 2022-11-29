@@ -80,8 +80,6 @@ export const PickFromMany = ({
     saveValues([]);
   };
 
-  console.log(selectedOptions);
-
   if (!sourceRelationData.length) {
     return null;
   }
@@ -99,7 +97,6 @@ export const PickFromMany = ({
               onChange={handleChange}
               input={<OutlinedInput id="select-multiple-chip" label={label} />}
               renderValue={(selected: any) => {
-                console.log(selected);
                 if (Array.isArray(selected)) {
                   return (
                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>

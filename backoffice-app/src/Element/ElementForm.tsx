@@ -6,7 +6,7 @@ import {
   required,
   TabbedForm,
   TextInput,
-  useGetRecordId,
+  useRecordContext,
 } from "react-admin";
 import { FormToolbar } from "../Form/FormToolbar";
 import { PickFromMany } from "../PickFromMany/PickFromMany";
@@ -15,12 +15,8 @@ import { useEffect, useState } from "react";
 import { Http } from "../_helper/http";
 import { Endpoint } from "../_const/endpoint";
 
-interface Props {
-  saveLabel: string;
-}
-
-export const ElementForm = ({ saveLabel }: Props) => {
-  const recordId = useGetRecordId();
+export const ElementForm = () => {
+  const record = useRecordContext();
 
   const [dictionaries, setDictionaries] = useState<any[]>([]);
 
@@ -33,7 +29,9 @@ export const ElementForm = ({ saveLabel }: Props) => {
   }, []);
 
   return (
-    <TabbedForm toolbar={<FormToolbar saveLabel={saveLabel} />}>
+    <TabbedForm
+      toolbar={<FormToolbar saveLabel={Boolean(record) ? "UPDATE" : "ADD"} />}
+    >
       <FormTab label="base">
         <TextInput disabled source="id" label="Id" fullWidth />
         <TextInput source="name" label="Name" fullWidth validate={required()} />
@@ -55,7 +53,7 @@ export const ElementForm = ({ saveLabel }: Props) => {
                 multiple={dictionary.multiple}
                 label={dictionary.name}
                 dictionary_id={dictionary.id}
-                element_id={recordId}
+                element_id={record.id}
                 sourceRelation={Endpoint.dictionary_values}
                 saveTo={Endpoint.element_dictionary_values}
               />

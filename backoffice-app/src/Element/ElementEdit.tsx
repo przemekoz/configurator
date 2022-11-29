@@ -4,6 +4,6 @@ import { ElementForm } from "./ElementForm";
 
 export const ElementEdit = () => (
   <Edit title={<FormTitle label="element" />}>
-    <ElementForm saveLabel="update element" />
+    <ElementForm />
   </Edit>
 );

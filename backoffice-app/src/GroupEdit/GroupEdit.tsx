@@ -11,19 +11,12 @@ import { useCheckRelations } from "../_hooks/useCheckRelations";
 
 export interface Props {
   source: string;
-  foreignKey: number | string;
+  foreignKey?: number | string;
   children: JSX.Element[] | JSX.Element;
 }
 
 export const GroupEdit = ({ children, source, foreignKey }: Props) => {
-  const [stateValue, setStateValue] = useState<any[]>(
-    [
-      { id: 81, name: "json", order: 20, to_delete: false },
-      { id: 83, name: "and", order: 10, to_delete: false },
-      { id: 82, name: "o'connor", order: 30, to_delete: false },
-      { id: 83, name: "sarah", order: 0, to_delete: false },
-    ].sort((itemA: any, itemB: any) => itemA.order - itemB.order)
-  );
+  const [stateValue, setStateValue] = useState<any[]>([]);
 
   const [confirmText, setConfirmText] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -39,11 +32,13 @@ export const GroupEdit = ({ children, source, foreignKey }: Props) => {
       saveButton.onclick = () => {
         Http.post(
           `${source}/${foreignKey}`,
-          stateValue.map((item: any, index: number) => ({
-            ...item,
-            order: index * 10,
-            to_delete: item.to_delete || false,
-          }))
+          stateValue
+            .filter((item: any) => item.name.length)
+            .map((item: any, index: number) => ({
+              ...item,
+              order: index * 10,
+              to_delete: item.to_delete || false,
+            }))
         );
       };
     }
@@ -116,9 +111,11 @@ export const GroupEdit = ({ children, source, foreignKey }: Props) => {
   return (
     <div className="group-edit">
       Values
-      {stateValue
-        .filter((item: any) => !item.to_delete)
-        .map((item: any, dataIndex: number) => (
+      {stateValue.map((item: any, dataIndex: number) => {
+        if (item.to_delete) {
+          return null;
+        }
+        return (
           <div key={dataIndex}>
             <GroupEditRow
               index={dataIndex}
@@ -132,7 +129,8 @@ export const GroupEdit = ({ children, source, foreignKey }: Props) => {
             </GroupEditRow>
             <Divider />
           </div>
-        ))}
+        );
+      })}
       <Button
         onClick={handleAdd}
         startIcon={<AddCircleOutlineIcon />}
