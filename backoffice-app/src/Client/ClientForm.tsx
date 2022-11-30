@@ -11,7 +11,7 @@ import { FormWrapper } from "../Form/FormWrapper";
 export const ClientForm = () => {
   const record = useRecordContext();
   return (
-    <FormWrapper isEdit={Boolean(record)}>
+    <FormWrapper isEdit={Boolean(record)} defaultValues={defaultValues}>
       <TextInput disabled source="id" fullWidth />
       <TextInput source="name" fullWidth validate={required()} />
       <TextInput source="email" fullWidth validate={email()} />
@@ -20,3 +20,8 @@ export const ClientForm = () => {
     </FormWrapper>
   );
 };
+
+const defaultValues = () => ({
+  discount: 0,
+  is_active: true,
+});

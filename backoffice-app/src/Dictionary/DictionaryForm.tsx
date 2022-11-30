@@ -21,7 +21,7 @@ export const DictionaryForm = ({ nextId }: Props) => {
   const nextInsertId = nextId ? nextId + 1 : undefined;
 
   return (
-    <FormWrapper isEdit={Boolean(record)}>
+    <FormWrapper isEdit={Boolean(record)} defaultValues={defaultValues}>
       <TextInput disabled source="id" fullWidth />
       <TextInput source="name" fullWidth validate={required()} />
       <BooleanInput source="is_active" />
@@ -50,3 +50,7 @@ export const DictionaryForm = ({ nextId }: Props) => {
     </FormWrapper>
   );
 };
+
+const defaultValues = () => ({
+  is_active: true,
+});

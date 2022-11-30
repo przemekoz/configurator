@@ -31,6 +31,7 @@ export const ElementForm = () => {
   return (
     <TabbedForm
       toolbar={<FormToolbar saveLabel={Boolean(record) ? "UPDATE" : "ADD"} />}
+      defaultValues={defaultValues}
     >
       <FormTab label="base">
         <TextInput disabled source="id" label="Id" fullWidth />
@@ -53,7 +54,7 @@ export const ElementForm = () => {
                 multiple={dictionary.multiple}
                 label={dictionary.name}
                 dictionary_id={dictionary.id}
-                element_id={record.id}
+                element_id={record ? record.id : 0}
                 sourceRelation={Endpoint.dictionary_values}
                 saveTo={Endpoint.element_dictionary_values}
               />
@@ -64,3 +65,7 @@ export const ElementForm = () => {
     </TabbedForm>
   );
 };
+
+const defaultValues = () => ({
+  is_active: true,
+});

@@ -4,8 +4,10 @@ import {
   Datagrid,
   EditButton,
   List,
+  ReferenceField,
   TextField,
 } from "react-admin";
+import { Endpoint } from "../_const/endpoint";
 import { DeleteButton } from "./DeleteButton";
 
 export const DictionaryList = () => (
@@ -15,6 +17,7 @@ export const DictionaryList = () => (
       <TextField source="name" />
       <BooleanField source="is_active" />
       <BooleanField source="multiple" />
+      <TextField source="values" />
       <EditButton />
       <DeleteButton />
     </Datagrid>

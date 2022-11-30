@@ -5,9 +5,13 @@ import { FormToolbar } from "./FormToolbar";
 interface Props {
   isEdit?: boolean;
   children: any;
+  defaultValues?: any;
 }
-export const FormWrapper = ({ isEdit, children }: Props) => (
-  <SimpleForm toolbar={<FormToolbar saveLabel={isEdit ? "UPDATE" : "ADD"} />}>
+export const FormWrapper = ({ isEdit, children, defaultValues }: Props) => (
+  <SimpleForm
+    toolbar={<FormToolbar saveLabel={isEdit ? "UPDATE" : "ADD"} />}
+    defaultValues={defaultValues}
+  >
     {children}
   </SimpleForm>
 );

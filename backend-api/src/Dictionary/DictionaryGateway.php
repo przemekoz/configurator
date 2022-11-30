@@ -8,6 +8,33 @@ class DictionaryGateway extends BaseGateway
         parent::setTableName("dictionary");
     }
 
+    public function getAll(): array
+    {
+        parse_str($_SERVER["QUERY_STRING"], $output);
+        $size = $output['size'];
+        $offset = $output['page'] * $size;
+        $orderBy = $output['sortField'];
+        $orderDirection = $output['sortDir'];
+        //$output['filter'];
+
+        $sql = "SELECT *, 
+            (select GROUP_CONCAT(name SEPARATOR ', ') from dictionary_value where dictionary_id=d.id) as `values` 
+            FROM {$this->tableName} d   
+            ORDER BY {$orderBy} {$orderDirection} 
+            LIMIT {$offset}, {$size}";
+
+        $stmt = $this->conn->query($sql);
+
+        $data = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $data[] = parseBooleanResponse($row);
+        }
+
+        $stmt = $this->conn->query("SELECT count(1) FROM {$this->tableName}");
+
+        return ["data" => $data, "total" => $stmt->fetch(PDO::FETCH_DEFAULT)[0]];
+    }
+
     public function create(array $data): string
     {
         $params = $this->prepareQuery($data);
