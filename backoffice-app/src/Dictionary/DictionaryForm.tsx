@@ -26,7 +26,7 @@ export const DictionaryForm = ({ nextId }: Props) => {
       <TextInput source="name" fullWidth validate={required()} />
       <BooleanInput source="is_active" />
 
-      {record && record.id === 0 && (
+      {!record && (
         <Stack direction="row" spacing={1} alignItems="baseline">
           <Typography>Single choice</Typography>
           <BooleanInput source="multiple" label="" />
