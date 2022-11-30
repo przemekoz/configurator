@@ -39,10 +39,10 @@ export const ElementForm = () => {
         <BooleanInput source="is_active" />
         <Grid container>
           <Grid item>
-            <ImageField source="thumbnailUrl" label="Image" />
+            <ImageField source="image" label="Image" />
           </Grid>
           <Grid item>
-            <ImageInput source="thumbnailUrl" label="Add/change image" />
+            <ImageInput source="image" label="Add/change image" />
           </Grid>
         </Grid>
       </FormTab>

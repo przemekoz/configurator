@@ -12,7 +12,7 @@ export const ElementList = () => (
   <List>
     <Datagrid rowClick="edit">
       <TextField source="id" label="Id" />
-      <ImageField source="thumbnailUrl" label="Image" />
+      <ImageField source="thumbnail" label="Image" />
       <TextField source="name" label="Title" />
       <BooleanField source="is_active" />
       <EditButton />
