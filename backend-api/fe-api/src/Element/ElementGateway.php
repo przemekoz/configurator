@@ -22,12 +22,14 @@ class ElementGateway extends MainGateway
         //     "name" => "pupcia1",
         //     "type" => "type1",
         //     ];
-        
+
+        fileLog("ZUPA");
+
         $whereA = [];
         foreach ($filters as $key => $value) {
-            array_push($whereA, "`d.{$key}`" . " = :".$key);
+            array_push($whereA, "`d.{$key}`" . " = :" . $key);
         }
-        
+
         $where = implode(" AND ", $whereA);
 
         $from = "FROM {$this->tableName} e
@@ -36,7 +38,7 @@ class ElementGateway extends MainGateway
             INNER JOIN dictionary d ON (dv.dictionary_id = d.id)";
 
         $sql = "SELECT * {$from} WHERE {$where}";
-            
+
         $stmt = $this->conn->prepare($sql);
 
         foreach ($filters as $key => $value) {

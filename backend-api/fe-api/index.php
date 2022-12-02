@@ -28,8 +28,6 @@ header("Access-Control-Allow-Methods: PUT, POST, GET, DELETE, OPTIONS");
 
 $parts = explode("/", $_SERVER["REQUEST_URI"]);
 
-fileLog("TEST");
-
 $endpoints = [
     Endpoints::Element->value,
 ];
@@ -41,7 +39,7 @@ if (!in_array($url[0], $endpoints)) {
     exit;
 }
 
-$id = $parts[2] ?? null;
+$id = $parts[3] ?? null;
 
 $database = new Database("localhost", "configurator_db", "root", "");
 $connection = $database->getConnection();
