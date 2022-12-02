@@ -17,8 +17,9 @@ export const ElementList = ({ filterValue }: Props) => {
   useEffect(() => {
     setLoading(true);
     Http.get(`elements?filter[${FilterName.type}]=${filterValue}`)
-      .then((response: { data: Element[] }) => {
-        setLamps(response.data);
+      .then((response: { data: { data: Element[] } }) => {
+        console.log(response);
+        setLamps(response.data.data);
       })
       .catch((e) => {
         setLamps(elements);

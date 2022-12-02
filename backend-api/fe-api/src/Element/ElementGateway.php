@@ -18,16 +18,10 @@ class ElementGateway extends MainGateway
         // $orderDirection = $output['sortDir'];
         //$output['filter'];
 
-        // $filters = [
-        //     "name" => "pupcia1",
-        //     "type" => "type1",
-        //     ];
-
-        fileLog("ZUPA");
-
         $whereA = [];
         foreach ($filters as $key => $value) {
-            array_push($whereA, "`d.{$key}`" . " = :" . $key);
+            array_push($whereA, "d.code = :{$key}");
+            array_push($whereA, "dv.code = :{$key}_value");
         }
 
         $where = implode(" AND ", $whereA);
@@ -37,12 +31,15 @@ class ElementGateway extends MainGateway
             INNER JOIN dictionary_value dv ON (edv.dictionary_value_id = dv.id)
             INNER JOIN dictionary d ON (dv.dictionary_id = d.id)";
 
-        $sql = "SELECT * {$from} WHERE {$where}";
+        $sql = "SELECT e.name, e.image, e.thumbnail {$from} WHERE {$where}";
+
+        fileLog($sql);
 
         $stmt = $this->conn->prepare($sql);
 
         foreach ($filters as $key => $value) {
-            $stmt->bindValue(":{$key}", $value, PDO::PARAM_STR);
+            $stmt->bindValue(":{$key}", $key, PDO::PARAM_STR);
+            $stmt->bindValue(":{$key}_value", $value, PDO::PARAM_STR);
         }
 
         $stmt->execute();
@@ -52,9 +49,17 @@ class ElementGateway extends MainGateway
             $data[] = parseBooleanResponse($row);
         }
 
-        $stmt = $this->conn->query("SELECT count(1) FROM {$from} WHERE {$where}");
+        // $stmt = $this->conn->prepare("SELECT count(1) FROM {$from} WHERE {$where}");
 
-        return ["data" => $data, "total" => $stmt->fetch(PDO::FETCH_DEFAULT)[0]];
+        // foreach ($filters as $key => $value) {
+        //     $stmt->bindValue(":{$key}", $key, PDO::PARAM_STR);
+        //     $stmt->bindValue(":{$key}_value", $value, PDO::PARAM_STR);
+        // }
+
+        // $stmt->execute();
+
+        // return ["data" => $data, "total" => $stmt->fetch(PDO::FETCH_DEFAULT)[0]];
+        return ["data" => $data, "total" => -1];
     }
 
     public function get(string $id): array | false

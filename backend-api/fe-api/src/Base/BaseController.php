@@ -14,6 +14,7 @@ class BaseController extends MainController
 
     private function processResourceRequest(string $method, string $id): void
     {
+
         // if string - specific method
         if (!is_numeric($id)) {
             $methodName = strpos($id, "?") ? substr($id, 0, strpos($id, "?")) : $id;
@@ -37,7 +38,7 @@ class BaseController extends MainController
                 echo json_encode($client);
                 break;
 
-           
+
 
             case "OPTIONS":
                 echo json_encode([
