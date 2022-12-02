@@ -1,0 +1,6 @@
+[02-Dec-2022 12:41:20 Europe/Berlin] PHP Warning:  require(C:\Users\przem\_projects\configurator\backend-api\fe-api\src/Element/ElementValidation.php): Failed to open stream: No such file or directory in C:\Users\przem\_projects\configurator\backend-api\fe-api\src\getController.php on line 4
+[02-Dec-2022 12:41:20 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\Users\przem\_projects\configurator\backend-api\fe-api\src/Element/ElementValidation.php' (include_path='C:\xampp2\php\PEAR') in C:\Users\przem\_projects\configurator\backend-api\fe-api\src\getController.php:4
+Stack trace:
+#0 C:\Users\przem\_projects\configurator\backend-api\fe-api\index.php(15): require()
+#1 {main}
+  thrown in C:\Users\przem\_projects\configurator\backend-api\fe-api\src\getController.php on line 4

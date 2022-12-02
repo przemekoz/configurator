@@ -177,3 +177,10 @@ COMMIT;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
 ALTER TABLE `element` ADD `image` VARCHAR(255) NULL AFTER `is_active`, ADD `thumbnail` VARCHAR(255) NULL AFTER `image`;
+
+ALTER TABLE `dictionary` ADD `predefined` TINYINT NOT NULL AFTER `multiple`;
+ALTER TABLE `dictionary` CHANGE `predefined` `predefined` TINYINT(4) NOT NULL DEFAULT '0';
+ALTER TABLE `dictionary_value` ADD `predefined` TINYINT NOT NULL DEFAULT '0' AFTER `sort`;
+
+ALTER TABLE `dictionary` ADD `code` VARCHAR(100) NOT NULL DEFAULT '' AFTER `predefined`;
+ALTER TABLE `dictionary_value` ADD `code` VARCHAR(100) NOT NULL DEFAULT '' AFTER `predefined`;
