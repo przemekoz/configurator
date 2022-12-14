@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Home } from "./pages/Home/Home";
 import { NotFound } from "./pages/NotFound/NotFound";
 import { Lamps } from "./pages/Lamps/Lamps";
@@ -13,12 +13,13 @@ const App = () => (
   <Provider store={store}>
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Navigate replace to="/lamps" />} />
         <Route path="/" element={<Home />}>
           <Route path="lamps" element={<Lamps />} />
           <Route path="crowns" element={<Crowns />} />
           <Route path="columns" element={<Columns />} />
-          <Route path="*" element={<NotFound />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   </Provider>
