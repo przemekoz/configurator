@@ -11,12 +11,17 @@ class ElementGateway extends MainGateway
     public function getAll(): array
     {
         parse_str($_SERVER["QUERY_STRING"], $output);
-        $filters = $output["filter"];
-        // $size = $output['size'];
-        // $offset = $output['page'] * $size;
-        // $orderBy = $output['sortField'];
-        // $orderDirection = $output['sortDir'];
-        //$output['filter'];
+        // $filterString = "type:type_1_amp_material:material_1,material_2";
+        $filterString = $output["filter"];
+        list($orderBy, $orderDirection) = explode(",", $output["order"]);
+
+        $filters = explode("_amp_", $filterString);
+
+        foreach ($filters as $item) {
+            list($filterName, $filterValues) = explode(":", $item);
+        }
+
+        fileLog($filters);
 
         $whereA = [];
         foreach ($filters as $key => $value) {
@@ -50,12 +55,6 @@ class ElementGateway extends MainGateway
         }
 
         // $stmt = $this->conn->prepare("SELECT count(1) FROM {$from} WHERE {$where}");
-
-        // foreach ($filters as $key => $value) {
-        //     $stmt->bindValue(":{$key}", $key, PDO::PARAM_STR);
-        //     $stmt->bindValue(":{$key}_value", $value, PDO::PARAM_STR);
-        // }
-
         // $stmt->execute();
 
         // return ["data" => $data, "total" => $stmt->fetch(PDO::FETCH_DEFAULT)[0]];

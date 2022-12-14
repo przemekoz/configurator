@@ -1,33 +1,52 @@
 import React, { useEffect, useState } from "react";
-import { FilterName } from "../../const/filterName";
-import { FilterValue } from "../../const/filterValue";
-import { Http } from "../../service/http";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../app-store";
+import { PredefinedFilterType } from "../../const/filterValue";
+import { selectFilter } from "../../features/filter/filter-selector";
+import { selectOrder } from "../../features/order/order-store";
+import { showPreview } from "../../features/preview/preview-store";
+import { useGetViewFromUrl } from "../../hooks/useGetViewFromUrl";
+import { useLoadAsyncData } from "../../hooks/useLoadAsyncData";
 import { Element } from "../../types/element";
-import { elements } from "../../_to_remove/elements";
+import { elements } from "../../_to_remove/mock-data";
 import { ProgressBar } from "../ProgressBar/ProgressBar";
 
 interface Props {
-  filterValue: FilterValue;
+  filterValue: PredefinedFilterType;
 }
 
 export const ElementList = ({ filterValue }: Props) => {
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
   const [lamps, setLamps] = useState<Element[]>([]);
+  const { order } = useSelector(selectOrder);
+  const view = useGetViewFromUrl();
+  const filter = useSelector((state: RootState) => selectFilter(state, view));
+
+  const load = useLoadAsyncData(
+    (response) => {
+      setLamps(response);
+    },
+    () => {
+      setLamps(elements);
+    },
+    () => {
+      setLoading(false);
+    }
+  );
 
   useEffect(() => {
     setLoading(true);
-    Http.get(`elements?filter[${FilterName.type}]=${filterValue}`)
-      .then((response: { data: { data: Element[] } }) => {
-        console.log(response);
-        setLamps(response.data.data);
-      })
-      .catch((e) => {
-        setLamps(elements);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+    load(
+      `elements?filter=type:${filterValue}${
+        filter ? `_amp_${filter}` : ""
+      }&order=${order}`
+    );
+  }, [filter, order]);
+
+  const handlePreviewClick = () => {
+    dispatch(showPreview());
+  };
 
   return (
     <div
@@ -75,18 +94,9 @@ export const ElementList = ({ filterValue }: Props) => {
             )}
             {!Boolean(index % 3) && <p className="h6 mb-2">Price: 321.01 $</p>}
 
-            <div
-              className="form-check mb-3"
-              style={{ display: "flex", gap: "5px" }}
-            >
-              <input className="form-check-input" type="checkbox" value="" />
-              <label className="form-check-label" htmlFor="flexCheckDefault">
-                Pick
-              </label>
-            </div>
-            <a href="#" className="btn btn-primary">
-              Find out more
-            </a>
+            <button className="btn btn-primary" onClick={handlePreviewClick}>
+              Pick
+            </button>
           </div>
         </div>
       ))}

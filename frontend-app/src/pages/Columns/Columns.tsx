@@ -1,5 +1,7 @@
 import React from "react";
 import { ElementList } from "../../components/ElementList/ElementList";
-import { FilterValue } from "../../const/filterValue";
+import { PredefinedFilterType } from "../../const/filterValue";
 
-export const Columns = () => <ElementList filterValue={FilterValue.column} />;
+export const Columns = () => (
+  <ElementList filterValue={PredefinedFilterType.column} />
+);
