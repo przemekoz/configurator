@@ -17,12 +17,6 @@ class ElementGateway extends MainGateway
 
         $filters = explode("_amp_", $filterString);
 
-        foreach ($filters as $item) {
-            list($filterName, $filterValues) = explode(":", $item);
-        }
-
-        fileLog($filters);
-
         $whereA = [];
         foreach ($filters as $key => $value) {
             array_push($whereA, "d.code = :{$key}");
@@ -38,13 +32,12 @@ class ElementGateway extends MainGateway
 
         $sql = "SELECT e.name, e.image, e.thumbnail {$from} WHERE {$where}";
 
-        fileLog($sql);
-
         $stmt = $this->conn->prepare($sql);
 
-        foreach ($filters as $key => $value) {
-            $stmt->bindValue(":{$key}", $key, PDO::PARAM_STR);
-            $stmt->bindValue(":{$key}_value", $value, PDO::PARAM_STR);
+        foreach ($filters as $item) {
+            list($filterName, $filterValues) = explode(":", $item);
+            $stmt->bindValue(":{$key}", $filterName, PDO::PARAM_STR);
+            $stmt->bindValue(":{$key}_value", $filterValues, PDO::PARAM_STR);
         }
 
         $stmt->execute();
