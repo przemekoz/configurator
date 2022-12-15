@@ -30,6 +30,7 @@ $parts = explode("/", $_SERVER["REQUEST_URI"]);
 
 $endpoints = [
     Endpoints::Element->value,
+    Endpoints::Filter->value,
 ];
 
 $url = explode("?", $parts[2]);

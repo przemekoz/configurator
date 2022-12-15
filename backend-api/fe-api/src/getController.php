@@ -13,6 +13,10 @@ function getController(string $url, $gateway): MainController
             $name = Endpoints::Element->name;
             break;
 
+        case Endpoints::Filter->value:
+            $name = Endpoints::Filter->name;
+            break;
+
         default:
             throw new ErrorException("Error: no matching Validation class");
     }

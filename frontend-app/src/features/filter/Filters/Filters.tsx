@@ -26,7 +26,7 @@ export const Filters = () => {
   );
 
   useEffect(() => {
-    load(`someUrl?type=${type}`);
+    load(`filters?type=${type}`);
   }, []);
 
   const handleSave = (data: ValueLabel[], code: string, label: string) => {
